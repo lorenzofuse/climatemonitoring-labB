@@ -1,58 +1,54 @@
 package com.climatemonitoring.server;
 
-import com.climatemonitoring.client.ClientHandler;
+import java.io.*;
+import java.net.*;
+import java.sql.*;
+import java.util.concurrent.*;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+public class ServerCM {
+    private static final int PORT = 8888;
+    private static final int MAX_THREADS = 50;
+    private static String dbUrl="jdbc:postgresql://localhost:5432/ClimateMonitoring";
+    private static String dbUser="postgres";
+    private static String dbPassword="postgre";
 
-public class ServerCM implements Runnable {
+    public static void main(String[] args) {
+        getDbCredentials();
 
-    private static final int PORT = 12345;  // Porta di ascolto del server
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/ClimateMonitoring";
-    private static final String DB_USER = "postgres";
-    private static final String DB_PASSWORD = "postgre";
-    private boolean running = true;
+        ExecutorService pool = Executors.newFixedThreadPool(MAX_THREADS);
 
-    @Override
-    public void run() {
-        // Connessione al DB
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             ServerSocket serverSocket = new ServerSocket(PORT)) {
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            System.out.println("Server in ascolto sulla porta " + PORT);
 
-            System.out.println("Server avviato sulla porta " + PORT);
-            System.out.println("Connessione al database riuscita");
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Nuovo client connesso: " + clientSocket.getInetAddress().getHostAddress());
 
-            // Loop per accettare nuove connessioni
-            while (running) {
-                try {
-                    Socket cliSocket = serverSocket.accept();
-                    System.out.println("Nuovo client connesso: " + cliSocket.getInetAddress());
-                    new Thread(new ClientHandler(cliSocket, conn)).start();
-                } catch (IOException e) {
-                    System.err.println("Errore durante l'accettazione di un client: " + e.getMessage());
-                }
+                pool.submit(new com.climatemonitoring.server.ClientHandler(clientSocket));
             }
-
-        } catch (SQLException e) {
-            System.err.println("Errore di connessione al database: " + e.getMessage());
-            e.printStackTrace();  // Stampa lo stack trace completo per la diagnosi
         } catch (IOException e) {
-            System.err.println("Errore durante l'avvio del server: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Errore del server: " + e.getMessage());
+        } finally {
+            pool.shutdown();
         }
     }
 
-    public void stopServer() {
-        running = false;
-        System.out.println("Server in fase di arresto");
+    private static void getDbCredentials() {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            System.out.print("Inserisci l'URL del database PostgreSQL: ");
+            dbUrl = reader.readLine();
+            System.out.print("Inserisci il nome utente del database: ");
+            dbUser = reader.readLine();
+            System.out.print("Inserisci la password del database: ");
+            dbPassword = reader.readLine();
+        } catch (IOException e) {
+            System.err.println("Errore nella lettura delle credenziali: " + e.getMessage());
+            System.exit(1);
+        }
     }
 
-    public static void main(String[] args) {
-        ServerCM server = new ServerCM();
-        new Thread(server).start();
+    public static Connection getDbConnection() throws SQLException {
+        return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
     }
 }
