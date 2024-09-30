@@ -4,14 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/dao/DataAccessObjects.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CentroMonitoraggio.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/OperatoreRegistrato.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClientHandler.java" afterDir="false" />
+    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="Creazione&#10;- ServerCM&#10;- ClientCM&#10;- ClientHandler&#10;Per gestire la connesione">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CoordinateMonitoraggio.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/ParametriClimatici.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/DbConnector.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/util/DatabaseManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/ClimateMonitoring.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/ClientCM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/ClientCM.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/ClientHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/dao/DataAccessObjects.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CentroMonitoraggio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CentroMonitoraggio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/OperatoreRegistrato.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/OperatoreRegistrato.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClientHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ServerCM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ServerCM.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -28,10 +33,8 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="ProjectErrors" />
@@ -49,19 +52,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.ClientCM.executor&quot;: &quot;Run&quot;,
-    &quot;Application.ServecCM.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/Lorenzo/OneDrive/Desktop/cm/src/main/java/com/climatemonitoring/Main.java&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.ClientCM.executor": "Run",
+    "Application.ServecCM.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/loren/OneDrive/Desktop/723605_Landro",
+    "onboarding.tips.debug.path": "C:/Users/Lorenzo/OneDrive/Desktop/cm/src/main/java/com/climatemonitoring/Main.java",
+    "settings.editor.selected.configurable": "terminal"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="client" />
+    </key>
+  </component>
   <component name="RunManager" selected="Application.ClientCM">
     <configuration name="ClientCM" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="com.climatemonitoring.client.ClientCM" />
@@ -82,15 +91,6 @@
       <item itemvalue="Application.ServecCM" />
     </list>
   </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="jdk-17.0.10-corretto-17.0.10-4caba194b151-5cd809f4" />
-        <option value="jdk-17.0.9-corretto-17.0.9-f644763e9732-ebaef533" />
-        <option value="jdk-21.0.1-openjdk-21.0.1-249ae16d76d6-a618e4d4" />
-      </set>
-    </attachedChunks>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -100,6 +100,19 @@
       <option name="presentableId" value="Default" />
       <updated>1727427250668</updated>
     </task>
+    <task id="LOCAL-00001" summary="Creazione&#10;- ServerCM&#10;- ClientCM&#10;- ClientHandler&#10;Per gestire la connesione">
+      <option name="closed" value="true" />
+      <created>1727462456711</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1727462456711</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Creazione&#10;- ServerCM&#10;- ClientCM&#10;- ClientHandler&#10;Per gestire la connesione" />
+    <option name="LAST_COMMIT_MESSAGE" value="Creazione&#10;- ServerCM&#10;- ClientCM&#10;- ClientHandler&#10;Per gestire la connesione" />
   </component>
 </project>

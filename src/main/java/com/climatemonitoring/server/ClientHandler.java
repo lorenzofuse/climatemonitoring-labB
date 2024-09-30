@@ -1,43 +1,55 @@
 package com.climatemonitoring.server;
 
+import com.climatemonitoring.util.DatabaseManager;
+
 import java.io.*;
 import java.net.*;
 import java.sql.*;
 
 public class ClientHandler implements Runnable {
-    private final Socket clientSocket;
+
+    private final Socket cliSocket;
 
     public ClientHandler(Socket socket) {
-        this.clientSocket = socket;
+        this.cliSocket=socket;
     }
 
     @Override
     public void run() {
-        try (
-                Connection conn = ServerCM.getDbConnection();
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
-        ) {
+        try{
+            BufferedReader in = new BufferedReader(new InputStreamReader(cliSocket.getInputStream()));
+            PrintWriter out = new PrintWriter(cliSocket.getOutputStream());
+
             String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                String response = processRequest(inputLine, conn);
-                out.println(response);
+            while((inputLine = in.readLine())!= null){
+                String response = processRequest(inputLine);
             }
-        } catch (IOException | SQLException e) {
-            System.err.println("Errore nella gestione del client: " + e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         } finally {
-            try {
-                clientSocket.close();
-            } catch (IOException e) {
-                System.err.println("Errore nella chiusura del socket client: " + e.getMessage());
+            try{
+                cliSocket.close();
+            }catch (IOException e1){
+                System.err.println("errore nella chiusura del socket" +e1.getMessage());
             }
         }
+
     }
 
-    private String processRequest(String request, Connection conn) {
-        // Implementa qui la logica per processare le richieste
-        // Usa la connessione al database per eseguire query o aggiornamenti
-        // Per ora, restituiamo solo un messaggio di conferma
-        return "Server ha elaborato la richiesta: " + request;
+
+    // Test: eseguire una query per ottenere il nome di un'area di monitoraggio                    ---DA MODIFICARE--
+    private String processRequest(String request){
+        String query = "Select nome FROM centromonitoraggio LIMIT !";
+        try{
+             ResultSet rs = DatabaseManager.getInstance().executeQuery(query);
+
+            if(rs.next()){
+                return "nome del centro di monitoraggio "+rs.getString("nome");
+            }else{
+                return "nessun centro di monitoraggio salvato";
+            }
+        } catch (SQLException e) {
+            return "Errore nella query "+e.getMessage();
+        }
     }
 }
