@@ -1,32 +1,45 @@
 package com.climatemonitoring.client;
 
-import java.io.*;
-import java.net.*;
+import com.climatemonitoring.shared.ClimateMonitoringService;
+import java.rmi.Naming;
+import java.util.Scanner;
 
 public class ClientCM {
-    private static final String SERVER_ADDRESS = "localhost";
-    private static final int SERVER_PORT =8888;
+    public static void main(String[] args) {
+        try {
+            // Collegarsi al servizio RMI
+            ClimateMonitoringService service = (ClimateMonitoringService) Naming.lookup("rmi://localhost/ClimateMonitoringService");
 
-    public static void main(String [] args){
-        try{
-            Socket socket = new Socket("localhost",8888);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
-            BufferedReader strIn = new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("Connesso al server. Digita un messaggio o 'exit' per uscire");
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Benvenuto nel sistema Climate Monitoring!");
 
-            String userInput;
-            while ((userInput = strIn.readLine()) != null) {
-                if ("exit".equalsIgnoreCase(userInput)) {
-                    break;
-                }
-                out.println(userInput);
-                System.out.println("Risposta del server: " + in.readLine());
+            // Esempio: Registrazione utente
+            System.out.println("Registrazione: Inserisci i dati");
+            System.out.print("Nome: ");
+            String nome = scanner.nextLine();
+            System.out.print("Cognome: ");
+            String cognome = scanner.nextLine();
+            System.out.print("Codice Fiscale: ");
+            String codiceFiscale = scanner.nextLine();
+            System.out.print("Email: ");
+            String email = scanner.nextLine();
+            System.out.print("Userid: ");
+            String userid = scanner.nextLine();
+            System.out.print("Password: ");
+            String password = scanner.nextLine();
+
+            boolean registrato = service.registrazione(nome, cognome, codiceFiscale, email, userid, password);
+            if (registrato) {
+                System.out.println("Registrazione avvenuta con successo!");
+            } else {
+                System.out.println("Errore nella registrazione!");
             }
-        } catch (UnknownHostException e) {
-            System.err.println("Host sconosciuto: " + SERVER_ADDRESS);
-        } catch (IOException e) {
-            System.err.println("Errore I/O nella connessione al server: " + e.getMessage());
+
+            // Altri comandi del client, come ricerca e inserimento dati
+            // ...
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
