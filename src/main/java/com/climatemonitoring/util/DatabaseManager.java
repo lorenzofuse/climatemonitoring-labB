@@ -43,6 +43,7 @@ public class DatabaseManager {
                 connection.close();
             }
         } catch (SQLException e) {
+            System.err.println("Error closing connection: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -52,8 +53,11 @@ public class DatabaseManager {
     }
 
     public void commitTransaction() throws SQLException {
-        getConnection().commit();
-        getConnection().setAutoCommit(true);
+        try {
+            getConnection().commit();
+        } finally {
+            getConnection().setAutoCommit(true);
+        }
     }
 
     public void rollbackTransaction() {
@@ -63,6 +67,7 @@ public class DatabaseManager {
                 connection.setAutoCommit(true);
             }
         } catch (SQLException e) {
+            System.err.println("Error during rollback: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -81,5 +86,20 @@ public class DatabaseManager {
             pstmt.setObject(i + 1, params[i]);
         }
         return pstmt.executeUpdate();
+    }
+
+    // Nuovo metodo per chiudere PreparedStatement e ResultSet in modo sicuro
+    public void closeResources(PreparedStatement pstmt, ResultSet rs) {
+        try {
+            if (rs != null && !rs.isClosed()) {
+                rs.close();
+            }
+            if (pstmt != null && !pstmt.isClosed()) {
+                pstmt.close();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error closing resources: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

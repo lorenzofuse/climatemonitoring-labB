@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="modifiche relative al server multiclient">
+    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="aggiornamento service interface e serverCm&#10;ci sono errori in quanto non sono state ancora implementate i metodi in se">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/OperatoriRegistrati.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/ParametriClimatici.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ServerCM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ServerCM.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CoordinateMonitoraggio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CoordinateMonitoraggio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/util/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/util/DatabaseManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,11 +96,20 @@
       <option name="project" value="LOCAL" />
       <updated>1727618538474</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="aggiornamento service interface e serverCm&#10;ci sono errori in quanto non sono state ancora implementate i metodi in se">
+      <option name="closed" value="true" />
+      <created>1727849531886</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1727849531886</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="modifiche relative al server multiclient" />
-    <option name="LAST_COMMIT_MESSAGE" value="modifiche relative al server multiclient" />
+    <MESSAGE value="aggiornamento service interface e serverCm&#10;ci sono errori in quanto non sono state ancora implementate i metodi in se" />
+    <option name="LAST_COMMIT_MESSAGE" value="aggiornamento service interface e serverCm&#10;ci sono errori in quanto non sono state ancora implementate i metodi in se" />
   </component>
 </project>
