@@ -16,6 +16,11 @@ public class CoordinateMonitoraggio {
         this.longitudine = longitudine;
     }
 
+    // Costruttore senza parametri (aggiunto) per cercaAreaGeograficaNome cercaAreaGeograficaCoordinate
+    public CoordinateMonitoraggio() {
+
+    }
+
     public int getId() {
         return id;
     }

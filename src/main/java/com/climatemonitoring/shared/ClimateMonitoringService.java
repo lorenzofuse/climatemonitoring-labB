@@ -1,20 +1,29 @@
 package com.climatemonitoring.shared;
 
+import com.climatemonitoring.model.CoordinateMonitoraggio;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.Date;
 import java.util.List;
 
 public interface ClimateMonitoringService extends Remote {
+    List<CoordinateMonitoraggio> cercaAreaGeograficaNome(String nome) throws RemoteException;
+    CoordinateMonitoraggio cercaAreaGeograficaCoordinate(Double latitudine, Double longitudine) throws RemoteException;
 
-    boolean registrazione(String nome, String cognome, String codiceFiscale, String email, String userId, String password) throws RemoteException;
+    String visualizzaAreaGeografica(int nome) throws RemoteException; //display tab coordinatemonitoraggio
 
-    boolean login (String userId, String password) throws RemoteException;
+    String visualizzaAreaCentroMonitoraggio(int areaId) throws RemoteException; //display area dentro centromonitoraggio
 
-    boolean creaCentroMonitoraggio(String nomeCentro, String indirizzo,int cap,String comune, String provincia, List<String> areeInteresse) throws RemoteException;
+    boolean registrazione(String nome, String cognome,String codiceFiscale, String email,String userId, String password, Integer centroMonitoraggioId) throws RemoteException;
 
-    boolean inserisciParametriClimatici(String area, String data, int vento, int umidita, int pressione, int temperatura, int precipitazione, int altitudine, int massag,String note) throws RemoteException;
+    boolean creaCentroMonitoraggio(String nome, String indirizzo, String cap, String comune, String provincia, int operatoreId) throws RemoteException;
 
-    List<String> cercaAreaGeografica(String query) throws RemoteException;
+    boolean inserisciParametriClimatici(int centroMonitoraggioId, int areaInteresseId, Date dataRilevazione,
+                                        int vento, int umidita, int pressione, int temperatura,
+                                        int precipitazioni, int altitudine, int massaGhiacciai, String note) throws RemoteException;
 
-    String visualizzaParametriClimatici(String area) throws RemoteException;
+    boolean autenticaOperatore(String userId, String password) throws RemoteException;
+
+    List<CoordinateMonitoraggio> getAreePerCentroMonitoraggio(int centroMonitoraggioId) throws RemoteException;
 }

@@ -1,41 +1,25 @@
 package com.climatemonitoring.server;
 
-import com.climatemonitoring.server.ClimateMonitoringServiceImpl;
-import com.climatemonitoring.shared.ClimateMonitoringService;
 import com.climatemonitoring.util.DatabaseManager;
 
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.util.Scanner;
 
 public class ServerCM {
-    public static void main(String[] args) {
-        try {
-            Scanner scanner = new Scanner(System.in);
-
-            System.out.print("Inserisci l'host del database: ");
-            String host = scanner.nextLine();
-
-            System.out.print("Inserisci l'username del database: ");
-            String username = scanner.nextLine();
-
-            System.out.print("Inserisci la password del database: ");
-            String password = scanner.nextLine();
-
-            // Inizializzazione del DatabaseManager con le credenziali inserite
-            DatabaseManager dbManager = DatabaseManager.getInstance();
-            dbManager.getConnection();
-
-            // Creare il registro RMI sulla porta 1099
+    public static void main(String [] args){
+        try{
             LocateRegistry.createRegistry(1099);
+            System.out.println("Registry RMI avviato sulla porta 1099");
 
-            // Creare l'implementazione del servizio
-            ClimateMonitoringService service = new ClimateMonitoringServiceImpl();
+            //creo l'ogg dbmanager per la gestione delle connessioni al db
+            DatabaseManager dbManager = new DatabaseManager();
 
-            // Registrare il servizio nel registro RMI
-            Naming.rebind("rmi://localhost/ClimateMonitoringService", service);
+            //creo l'istanza del servizio RMI
+            ClimateMonitoringServiceImpl climateService = new ClimateMonitoringServiceImpl(dbManager);
 
-            System.out.println("Server avviato e servizio RMI registrato...");
+            Naming.rebind("rmi://localhost/ClimateMonitoringService", climateService);
+            System.out.println("Servizio ClimateMonitoring registrato nel Registry RMI");
         } catch (Exception e) {
             e.printStackTrace();
         }

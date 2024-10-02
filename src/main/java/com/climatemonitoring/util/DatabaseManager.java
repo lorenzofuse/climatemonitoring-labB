@@ -14,7 +14,7 @@ public class DatabaseManager {
     private static DatabaseManager instance;
     private Connection connection;
 
-    private DatabaseManager() {
+    public DatabaseManager() {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
