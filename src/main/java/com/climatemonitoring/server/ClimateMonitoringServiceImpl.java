@@ -1,6 +1,7 @@
 package com.climatemonitoring.server;
 
 import com.climatemonitoring.shared.ClimateMonitoringService;
+import com.climatemonitoring.util.DatabaseManager;
 
 import javax.swing.text.rtf.RTFEditorKit;
 import java.rmi.RemoteException;
@@ -12,12 +13,15 @@ import java.util.List;
 public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements ClimateMonitoringService {
 
     private Connection conn;
+    private DatabaseManager dbManager;
     public ClimateMonitoringServiceImpl() throws RemoteException {
         super();
         try{
             //connessione al db
-            conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ClimateMonitoring", "postgres", "postgre");
-        } catch (SQLException e) {
+             dbManager = DatabaseManager.getInstance();
+
+             //la connessione viene gestita direttamente dentro la classe DataBaseManager
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -25,7 +29,7 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
     @Override
     public boolean registrazione(String nome, String cognome, String codiceFiscale, String email, String userId, String password) throws RemoteException {
         try{
-            String query = "INSERT INTO operatoriregistrati(nome, cognome, codiceFiscale, String email, String userId, String password) VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO operatoriregistrati(nome, cognome, codiceFiscale, email, userId, password) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, nome);
             stmt.setString(2, cognome);
@@ -58,55 +62,86 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
 
     @Override
     public boolean creaCentroMonitoraggio(String nomeCentro, String indirizzo, int cap, String comune, String provincia, List<String> areeInteresse) throws RemoteException {
-        try{
-            String query = "INSERT INTO centrimonitoraggio(nomeCentro, indirizzo, cap, comune, provincia) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1,nomeCentro);
-            stmt.setString(2,indirizzo);
+        try {
+            // Avvio della transazione
+            dbManager.beginTransaction();
+
+            // Inserimento nel CentroMonitoraggio
+            String query = "INSERT INTO centrimonitoraggio(nome, indirizzo, cap, comune, provincia) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement stmt = dbManager.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            stmt.setString(1, nomeCentro);
+            stmt.setString(2, indirizzo);
             stmt.setInt(3, cap);
-            stmt.setString(4,comune);
-            stmt.setString(5,provincia);
+            stmt.setString(4, comune);
+            stmt.setString(5, provincia);
             stmt.executeUpdate();
 
+            // Ottenere l'ID del centro di monitoraggio appena creato
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (!generatedKeys.next()) {
+                throw new SQLException("Errore nella creazione del CentroMonitoraggio, nessun ID ottenuto.");
+            }
+            int centroId = generatedKeys.getInt(1);
 
-            //aggiungo le arre di interesse a questo centro
-            for(String area : areeInteresse){
-                query = "INSERT INTO centrimonitoraggio(nomeCentro, indirizzo, cap, comune, provincia) VALUES (?, ?, ?, ?, ?)";
-                stmt.setString(1,nomeCentro);
-                stmt.setString(2,indirizzo);
-                stmt.setInt(3, cap);
-                stmt.setString(4,comune);
-                stmt.setString(5,provincia);
+            // Inserimento nelle AreeInteresse
+            query = "INSERT INTO areeinteresse(nome, centro_monitoraggio_id, coordinate_monitoraggio_id) VALUES (?, ?, ?)";
+            stmt = dbManager.getConnection().prepareStatement(query);
+
+            for (String area : areeInteresse) {
+                // Supponiamo che l'area contenga il nome dell'area e le sue coordinate siano già state create
+                // Devi mappare il nome dell'area con le coordinate esistenti in "coordinatemonitoraggio"
+          //      int coordinateId = getCoordinateIdByNome(area);  // Metodo per ottenere l'ID delle coordinate
+                stmt.setString(1, area);
+                stmt.setInt(2, centroId);
+                stmt.setInt(3, coordinateId);
                 stmt.executeUpdate();
             }
+
+            dbManager.commitTransaction();
             return true;
         } catch (Exception e) {
+            dbManager.rollbackTransaction();
             e.printStackTrace();
             return false;
         }
     }
+
+
 
     @Override
     public boolean inserisciParametriClimatici(String area, String data, int vento, int umidita, int pressione, int temperatura, int precipitazione, int altitudine, int massag, String note) throws RemoteException {
         try {
-            String query = "INSERT INTO parametriclimatici(data_rilevazione, vento, umidita, pressione, temperatura, precipitazioni, altitudine, massa_ghiacciai, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, data);
-            stmt.setInt(2, vento);
-            stmt.setInt(3, umidita);
-            stmt.setInt(4, pressione);
-            stmt.setInt(5, temperatura);
-            stmt.setInt(6,precipitazione);
-            stmt.setInt(7,altitudine);
-            stmt.setInt(8,massag);
-            stmt.setString(9, note);
+            dbManager.beginTransaction();  // Avvio della transazione
+
+            // Trova l'ID dell'area in base al nome
+        //    int areaId = getAreaIdByNome(area);  // Metodo per ottenere l'ID dell'area
+
+            // Inserisci i parametri climatici
+            String query = "INSERT INTO parametriclimatici(area_interesse_id, data_rilevazione, vento, umidita, pressione, temperatura, precipitazioni, altitudine, massa_ghiacciai, note) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement stmt = dbManager.getConnection().prepareStatement(query);
+            stmt.setInt(1, areaId);
+            stmt.setString(2, data);
+            stmt.setInt(3, vento);
+            stmt.setInt(4, umidita);
+            stmt.setInt(5, pressione);
+            stmt.setInt(6, temperatura);
+            stmt.setInt(7, precipitazione);
+            stmt.setInt(8, altitudine);
+            stmt.setInt(9, massag);
+            stmt.setString(10, note);
             stmt.executeUpdate();
+
+            dbManager.commitTransaction();  // Commit della transazione
             return true;
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            dbManager.rollbackTransaction();  // Rollback in caso di errore
             e.printStackTrace();
             return false;
         }
     }
+
+
 
 
     //controllare da qua
@@ -114,12 +149,17 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
     public List<String> cercaAreaGeografica(String query) throws RemoteException {
         List<String> result = new ArrayList<>();
         try {
-            String sql = "SELECT nomeArea FROM AreeInteresse WHERE nomeArea LIKE ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            // Ricerca in base al nome dell'area o al nome della città dalle coordinate
+            String sql = "SELECT ai.nome, cm.nome_citta FROM areeinteresse ai " +
+                    "JOIN coordinatemonitoraggio cm ON ai.coordinate_monitoraggio_id = cm.id " +
+                    "WHERE ai.nome LIKE ? OR cm.nome_citta LIKE ?";
+            PreparedStatement stmt = dbManager.getConnection().prepareStatement(sql);
             stmt.setString(1, "%" + query + "%");
+            stmt.setString(2, "%" + query + "%");
             ResultSet rs = stmt.executeQuery();
+
             while (rs.next()) {
-                result.add(rs.getString("nomeArea"));
+                result.add("Area: " + rs.getString("nome") + ", Città: " + rs.getString("nome_citta"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -127,18 +167,27 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
         return result;
     }
 
+
     @Override
     public String visualizzaParametriClimatici(String area) throws RemoteException {
         StringBuilder result = new StringBuilder();
         try {
-            String sql = "SELECT * FROM ParametriClimatici WHERE area = ?";
-            PreparedStatement stmt = conn.prepareStatement(sql);
+            String sql = "SELECT * FROM parametriclimatici pc " +
+                    "JOIN areeinteresse ai ON pc.area_interesse_id = ai.id " +
+                    "WHERE ai.nome = ?";
+            PreparedStatement stmt = dbManager.getConnection().prepareStatement(sql);
             stmt.setString(1, area);
             ResultSet rs = stmt.executeQuery();
+
             while (rs.next()) {
-                result.append("Data: ").append(rs.getString("data"))
-                        .append(", Parametro 1: ").append(rs.getInt("parametro1"))
-                        .append(", Parametro 2: ").append(rs.getInt("parametro2"))
+                result.append("Data: ").append(rs.getString("data_rilevazione"))
+                        .append(", Vento: ").append(rs.getInt("vento"))
+                        .append(", Umidità: ").append(rs.getInt("umidita"))
+                        .append(", Pressione: ").append(rs.getInt("pressione"))
+                        .append(", Temperatura: ").append(rs.getInt("temperatura"))
+                        .append(", Precipitazioni: ").append(rs.getInt("precipitazioni"))
+                        .append(", Altitudine: ").append(rs.getInt("altitudine"))
+                        .append(", Massa Ghiacciai: ").append(rs.getInt("massa_ghiacciai"))
                         .append(", Note: ").append(rs.getString("note")).append("\n");
             }
         } catch (Exception e) {
@@ -146,4 +195,5 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
         }
         return result.toString();
     }
+
 }
