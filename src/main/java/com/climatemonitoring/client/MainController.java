@@ -1,9 +1,14 @@
 package com.climatemonitoring.client;
 
+import com.climatemonitoring.model.CoordinateMonitoraggio;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
+
+import java.rmi.RemoteException;
+import java.util.List;
 
 public class MainController {
 
@@ -13,12 +18,18 @@ public class MainController {
     // Riferimenti agli elementi FXML
     @FXML
     private TabPane mainTabPane;
-
     @FXML
     private Button searchButton;
-
     @FXML
     private Button logoutButton;
+    @FXML
+    private TextField nameField;
+    @FXML
+    private TextField stateField;
+    @FXML
+    private TextField latitudeField;
+    @FXML
+    private TextField longitudeField;
 
     // Iniezione dell'istanza di ClientCM
     public void setMainApp(ClientCM mainApp) {
@@ -35,11 +46,17 @@ public class MainController {
         mainTabPane.getTabs().addAll(tab1, tab2);
     }
 
-    // Metodo per gestire l'azione del pulsante di ricerca
+    // cercaAreaGeograficaPerNome
     @FXML
-    private void handleSearch() {
-        // Qui implementerai la logica per la ricerca dei dati climatici
-        System.out.println("Funzione di ricerca in sviluppo...");
+    private void cercaAreaGeograficaPerNome() {
+        String nome = nameField.getText();
+
+        try{
+            List<CoordinateMonitoraggio> res = ClientCM.getService().cercaAreaGeograficaNome(nome);
+
+        } catch (RemoteException e) {
+
+        }
     }
 
     // Metodo per gestire il logout

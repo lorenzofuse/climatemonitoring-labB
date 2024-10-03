@@ -25,8 +25,9 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
         List<CoordinateMonitoraggio> aree = new ArrayList<>();
         String sql = "SELECT * FROM coordinatemonitoraggio WHERE nome_citta = ?";
 
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = dbManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, nome);  // Imposta il parametro 'nome'
             ResultSet rs = pstmt.executeQuery();
@@ -47,7 +48,6 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return aree;  // Ritorna la lista delle aree trovate
     }
 
@@ -57,11 +57,13 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
         CoordinateMonitoraggio area = null;
         String sql = "SELECT * FROM coordinatemonitoraggio WHERE latitudine = ? AND longitudine = ?";
 
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = dbManager.getConnection();
 
-            pstmt.setDouble(1, latitudine);  // Imposta la latitudine
-            pstmt.setDouble(2, longitudine);  // Imposta la longitudine
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setDouble(1, latitudine);
+            pstmt.setDouble(2, longitudine);
 
             ResultSet rs = pstmt.executeQuery();
 
@@ -83,14 +85,15 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
 
 
     @Override
-    public String visualizzaAreaGeografica(int id) throws RemoteException {
+    public String visualizzaAreaGeografica(int nome) throws RemoteException {
         String sql = "SELECT * FROM coordinatemonitoraggio WHERE id = ?";
         StringBuilder result = new StringBuilder();
 
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try{
+            Connection conn = dbManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setInt(1, id);  // Imposta l'ID dell'area
+            pstmt.setInt(1, nome);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
@@ -107,7 +110,7 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
             e.printStackTrace();
         }
 
-        return result.toString();  // Ritorna la rappresentazione testuale dell'area
+        return result.toString();
     }
 
 
@@ -119,10 +122,11 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
 
         StringBuilder result = new StringBuilder();
 
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = dbManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setInt(1, areaId);  // Imposta l'ID dell'area
+            pstmt.setInt(1, areaId);
 
             ResultSet rs = pstmt.executeQuery();
 
@@ -138,17 +142,18 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
             e.printStackTrace();
         }
 
-        return result.toString();  // Ritorna la rappresentazione testuale dell'area
+        return result.toString();
     }
 
 
     @Override
-    public boolean registrazione(String nome, String cognome, String codiceFiscale, String email, String userId, String password, Integer centroMonitoraggioId) throws RemoteException {
+    public boolean registrazione(String nome, String cognome, String codiceFiscale, String email, String userId, String password, int centroMonitoraggioId) throws RemoteException {
         String sql = "INSERT INTO operatoriregistrati (nome, cognome, codice_fiscale, email, userid, password, centro_monitoraggio_id) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = dbManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, nome);
             pstmt.setString(2, cognome);
@@ -163,8 +168,7 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
             return rowsAffected > 0;  // Ritorna true se l'inserimento è andato a buon fine
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new RemoteException("Errore durante la registrazione", e);
         }
     }
 
@@ -172,8 +176,9 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
     public boolean creaCentroMonitoraggio(String nome, String indirizzo, String cap, String comune, String provincia, int operatoreId) throws RemoteException {
         String sql = "INSERT INTO centriMonitoraggio (nome, indirizzo, cap, comune, provincia, operatore_id) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = dbManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, nome);
             pstmt.setString(2, indirizzo);
@@ -200,8 +205,9 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
         String sql = "INSERT INTO parametriclimatici (centro_monitoraggio_id, area_interesse_id, data_rilevazione, vento, umidita, pressione, temperatura, precipitazioni, altitudine, massa_ghiacciai, note) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = dbManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1, centroMonitoraggioId);
             pstmt.setInt(2, areaInteresseId);
@@ -230,11 +236,12 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
     public boolean autenticaOperatore(String userId, String password) throws RemoteException {
         String sql = "SELECT * FROM operatoriregistrati WHERE userid = ? AND password = ?";
 
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = dbManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setString(1, userId);  // Imposta l'userId
-            pstmt.setString(2, password);  // Imposta la password
+            pstmt.setString(1, userId);
+            pstmt.setString(2, password);
 
             ResultSet rs = pstmt.executeQuery();
 
@@ -253,10 +260,11 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
         List<CoordinateMonitoraggio> aree = new ArrayList<>();
         String sql = "SELECT * FROM areeinteresse WHERE centro_monitoraggio_id = ?";
 
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = dbManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setInt(1, centroMonitoraggioId);  // Imposta l'ID del centro di monitoraggio
+            pstmt.setInt(1, centroMonitoraggioId);
 
             ResultSet rs = pstmt.executeQuery();
 

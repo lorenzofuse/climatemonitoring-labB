@@ -4,14 +4,32 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.climatemonitoring.client.LoginController">
-    <center>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.climatemonitoring.client.MainController">
+    <top>
         <VBox alignment="CENTER" spacing="10">
-            <Label text="Username:"/>
-            <TextField fx:id="usernameField" />
-            <Label text="Password:"/>
-            <PasswordField fx:id="passwordField" />
-            <Button text="Login" onAction="#handleLogin"/>
+            <Label text="Climate Monitoring System" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+            <GridPane hgap="10" vgap="10" alignment="CENTER">
+                <Label text="Area Name:"/>
+                <TextField fx:id="nameField" />
+                <Label text="State:"/>
+                <TextField fx:id="stateField" />
+                <Label text="Latitude:"/>
+                <TextField fx:id="latitudeField" />
+                <Label text="Longitude:"/>
+                <TextField fx:id="longitudeField" />
+            </GridPane>
         </VBox>
+    </top>
+    <center>
+        <TabPane fx:id="mainTabPane">
+            <!-- Schede specifiche per il monitoraggio -->
+        </TabPane>
     </center>
+    <bottom>
+        <HBox alignment="CENTER" spacing="10">
+            <Button text="Search" fx:id="searchButton" onAction="#cercaAreaGeograficaPerNome"/>
+            <Button text="Logout" fx:id="logoutButton" onAction="#handleLogout"/>
+        </HBox>
+    </bottom>
 </BorderPane>
+

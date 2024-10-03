@@ -16,7 +16,15 @@
         <junit.version>5.9.2</junit.version>
     </properties>
 
+    <!-- HikariCP  -->
     <dependencies>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.0.1</version>
+        </dependency>
+
+
         <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
