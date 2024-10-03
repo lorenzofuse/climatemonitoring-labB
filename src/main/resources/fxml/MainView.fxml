@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.climatemonitoring.client.MainController">
+    <top>
+        <HBox alignment="CENTER" spacing="10">
+            <Label text="Climate Monitoring System" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+    <center>
+        <TabPane fx:id="mainTabPane">
+            <!-- Qui puoi aggiungere le schede (tabs) specifiche per il monitoraggio -->
+        </TabPane>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER" spacing="10">
+            <Button text="Search" fx:id="searchButton" onAction="#handleSearch"/>
+            <Button text="Logout" fx:id="logoutButton" onAction="#handleLogout"/>
+        </HBox>
+    </bottom>
+</BorderPane>
