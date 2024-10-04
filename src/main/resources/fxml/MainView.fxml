@@ -11,12 +11,23 @@
     </top>
     <center>
         <TabPane fx:id="mainTabPane">
-            <!-- Qui puoi aggiungere le schede (tabs) specifiche per il monitoraggio -->
+            <!-- Scheda per visualizzare i risultati della ricerca -->
+            <Tab text="Search Results">
+                <TableView fx:id="resultsTable">
+                    <columns>
+                        <TableColumn fx:id="nameColumn" text="Name" />
+                        <TableColumn fx:id="stateColumn" text="State" />
+                        <TableColumn fx:id="latitudeColumn" text="Latitude" />
+                        <TableColumn fx:id="longitudeColumn" text="Longitude" />
+                    </columns>
+                </TableView>
+            </Tab>
         </TabPane>
     </center>
+
     <bottom>
         <HBox alignment="CENTER" spacing="10">
-            <Button text="Search" fx:id="searchButton" onAction="#handleSearch"/>
+            <Button text="Search" fx:id="searchButton" onAction="#cercaAreaGeograficaPerNome"/>
             <Button text="Logout" fx:id="logoutButton" onAction="#handleLogout"/>
         </HBox>
     </bottom>

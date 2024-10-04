@@ -4,15 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="Implementazione rmi completata&#10;completamento dei service contenente i metodi da implementare dentro la classe ClimateMonitoringServiceImpl sviluppando le query da usare per poter comunicare con il db&#10;Creazione classe ServerCM e ClientCM per poter tentare la comunicazione, funziona">
+    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="Implementazione UI per il client con i relativi metodi java fx e file fxml&#10;Per il momento l'interfaccia grafica funziona, ha due pagine login e main&#10;Modificarle per adattarle al progetto e bisogna implementare i vari mmetodi relativi ad essi">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/ClientCM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/ClientCM.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/shared/ClimateMonitoringService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/shared/ClimateMonitoringService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/util/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/util/DatabaseManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/LoginView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/LoginView.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CoordinateMonitoraggio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CoordinateMonitoraggio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainView.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,8 +19,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="FxmlFile" />
         <option value="Class" />
+        <option value="FxmlFile" />
+        <option value="module-info" />
       </list>
     </option>
   </component>
@@ -82,15 +80,6 @@
       <item itemvalue="Application.ServecCM" />
     </list>
   </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="jdk-17.0.10-corretto-17.0.10-4caba194b151-5cd809f4" />
-        <option value="jdk-17.0.9-corretto-17.0.9-f644763e9732-ebaef533" />
-        <option value="jdk-21.0.1-openjdk-21.0.1-249ae16d76d6-a618e4d4" />
-      </set>
-    </attachedChunks>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -108,29 +97,38 @@
       <option name="project" value="LOCAL" />
       <updated>1727618538474</updated>
     </task>
-    <task id="LOCAL-00002" summary="implementazione RMI con prova creazione dao e dbconnector">
+    <task id="LOCAL-00002" summary="aggiornamento service interface e serverCm&#10;ci sono errori in quanto non sono state ancora implementate i metodi in se">
       <option name="closed" value="true" />
-      <created>1727815480235</created>
+      <created>1727849531886</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1727815480235</updated>
+      <updated>1727849531886</updated>
     </task>
-    <task id="LOCAL-00003" summary="Implementazione rmi completata&#10;completamento dei service contenente i metodi da implementare dentro la classe ClimateMonitoringServiceImpl sviluppando le query da usare per poter comunicare con il db&#10;Creazione classe ServerCM e ClientCM per poter tentare la comunicazione, funziona">
+    <task id="LOCAL-00003" summary="ulteriori modifiche relative al commit precedente">
       <option name="closed" value="true" />
-      <created>1727886075344</created>
+      <created>1727868046952</created>
       <option name="number" value="00003" />
       <option name="presentableId" value="LOCAL-00003" />
       <option name="project" value="LOCAL" />
-      <updated>1727886075344</updated>
+      <updated>1727868046952</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Implementazione UI per il client con i relativi metodi java fx e file fxml&#10;Per il momento l'interfaccia grafica funziona, ha due pagine login e main&#10;Modificarle per adattarle al progetto e bisogna implementare i vari mmetodi relativi ad essi">
+      <option name="closed" value="true" />
+      <created>1727937076514</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1727937076514</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="modifiche relative al server multiclient" />
-    <MESSAGE value="implementazione RMI con prova creazione dao e dbconnector" />
-    <MESSAGE value="Implementazione rmi completata&#10;completamento dei service contenente i metodi da implementare dentro la classe ClimateMonitoringServiceImpl sviluppando le query da usare per poter comunicare con il db&#10;Creazione classe ServerCM e ClientCM per poter tentare la comunicazione, funziona" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implementazione rmi completata&#10;completamento dei service contenente i metodi da implementare dentro la classe ClimateMonitoringServiceImpl sviluppando le query da usare per poter comunicare con il db&#10;Creazione classe ServerCM e ClientCM per poter tentare la comunicazione, funziona" />
+    <MESSAGE value="aggiornamento service interface e serverCm&#10;ci sono errori in quanto non sono state ancora implementate i metodi in se" />
+    <MESSAGE value="ulteriori modifiche relative al commit precedente" />
+    <MESSAGE value="Implementazione UI per il client con i relativi metodi java fx e file fxml&#10;Per il momento l'interfaccia grafica funziona, ha due pagine login e main&#10;Modificarle per adattarle al progetto e bisogna implementare i vari mmetodi relativi ad essi" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implementazione UI per il client con i relativi metodi java fx e file fxml&#10;Per il momento l'interfaccia grafica funziona, ha due pagine login e main&#10;Modificarle per adattarle al progetto e bisogna implementare i vari mmetodi relativi ad essi" />
   </component>
 </project>
