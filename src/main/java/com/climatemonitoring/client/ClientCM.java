@@ -4,6 +4,7 @@ package com.climatemonitoring.client;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import com.climatemonitoring.shared.ClimateMonitoringService;
@@ -37,29 +38,23 @@ public class ClientCM extends Application{
         }
     }
 
-    private void initRootLayout(){
-        try{
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(ClientCM.class.getResource("/fxml/MainView.fxml"));
+    private void initRootLayout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RootLayout.fxml"));
             rootLayout = loader.load();
-
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             primaryStage.show();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     public void showMainView() {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/fxml/MainView.fxml"));
-            BorderPane mainLayout = loader.load();
-
-            Scene scene = new Scene(mainLayout);
-            primaryStage.setScene(scene);
-            primaryStage.show();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
+            BorderPane mainView = loader.load();
+            rootLayout.setCenter(mainView);
 
             // Collegamento al controller della vista principale
             MainController controller = loader.getController();
@@ -69,23 +64,19 @@ public class ClientCM extends Application{
         }
     }
 
-    protected void showLoginView(){
-        try{
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(ClientCM.class.getResource("/fxml/LoginView.fxml"));
-            BorderPane mainView = loader.load();
+    public void showLoginView() {
+        try {
+            // Correggiamo il percorso rimuovendo le virgolette extra e usando lo slash corretto
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
+            BorderPane loginView = loader.load();
+            rootLayout.setCenter(loginView);
 
-            //Sset the main view into center of main layout
-            rootLayout.setCenter(mainView);
-
-            //get controller n set main app reference
             LoginController controller = loader.getController();
             controller.setMainApp(this);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
     public static ClimateMonitoringService getService() {
         return service;
     }

@@ -8,8 +8,8 @@ import java.util.Date;
 import java.util.List;
 
 public interface ClimateMonitoringService extends Remote {
-    List<CoordinateMonitoraggio> cercaAreaGeograficaNome(String nome) throws RemoteException;
-    CoordinateMonitoraggio cercaAreaGeograficaCoordinate(Double latitudine, Double longitudine) throws RemoteException;
+    List<CoordinateMonitoraggio> cercaAreaGeograficaNome(String nome, String stato) throws RemoteException;
+    List<CoordinateMonitoraggio> cercaAreaGeograficaCoordinate(Double latitudine, Double longitudine) throws RemoteException;
 
     String visualizzaAreaGeografica(int nome) throws RemoteException; //display tab coordinatemonitoraggio (cerca i paesi dentro il file fornito dal prof)
 

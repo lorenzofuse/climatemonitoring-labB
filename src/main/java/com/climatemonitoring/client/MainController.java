@@ -3,8 +3,10 @@ package com.climatemonitoring.client;
 import com.climatemonitoring.model.CoordinateMonitoraggio;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainController {
@@ -13,37 +15,14 @@ public class MainController {
     private ClientCM mainApp;
 
     // Riferimenti agli elementi FXML
-    @FXML
-    private TabPane mainTabPane;
-    @FXML
-    private Button searchButton;
-    @FXML
-    private Button logoutButton;
-    @FXML
-    private TextField nameField;
-    @FXML
-    private TextField stateField;
-    @FXML
-    private TextField latitudeField;
-    @FXML
-    private TextField longitudeField;
-    @FXML
-    private TableView<CoordinateMonitoraggio> resultsTable;
 
-    @FXML
-    private TableColumn<CoordinateMonitoraggio, String> nameColumn;
-
-    @FXML
-    private TableColumn<CoordinateMonitoraggio, String> stateColumn;
-
-    @FXML
-    private TableColumn<CoordinateMonitoraggio, Double> latitudeColumn;
-
-    @FXML
-    private TableColumn<CoordinateMonitoraggio, Double> longitudeColumn;
-
-
-    // Iniezione dell'istanza di ClientCM
+    @FXML private TabPane mainTabPane;
+    @FXML private TextField nameField, stateField, latitudeField, longitudeField;
+    @FXML private TableView<CoordinateMonitoraggio> resultsTable;
+    @FXML private TableColumn<CoordinateMonitoraggio, String> nameColumn, stateColumn;
+    @FXML private TableColumn<CoordinateMonitoraggio, Double> latitudeColumn, longitudeColumn;
+    @FXML private Button loginButton, searchButton;
+    @FXML private VBox operatorMenu;
     public void setMainApp(ClientCM mainApp) {
         this.mainApp = mainApp;
     }
@@ -51,11 +30,8 @@ public class MainController {
     // Metodo di inizializzazione chiamato automaticamente dopo il caricamento del file FXML
     @FXML
     private void initialize() {
-        // Esempio di inizializzazione delle tab
-        Tab tab1 = new Tab("Dati climatici");
-        Tab tab2 = new Tab("Storico");
-
-        mainTabPane.getTabs().addAll(tab1, tab2);
+       initializeColumn();
+       operatorMenu.setVisible(true);
     }
 
     //inizializzo le colonne della tableview
@@ -72,33 +48,42 @@ public class MainController {
     // cercaAreaGeograficaPerNome
     @FXML
     private void cercaAreaGeograficaPerNome() {
-        String nome = nameField.getText();
+        String nome = nameField.getText().trim();
+        String stato = stateField.getText().trim();
 
         try{
-            List<CoordinateMonitoraggio> res = ClientCM.getService().cercaAreaGeograficaNome(nome);
+            List<CoordinateMonitoraggio> resN = new ArrayList<>();
+            if(!nome.isEmpty() && !stato.isEmpty()){
+                resN = ClientCM.getService().cercaAreaGeograficaNome(nome,stato);
+                displaySearchResults(resN);
+            } else {
+               showAlert(Alert.AlertType.INFORMATION, "RICERCA PER NOME ", "Inserire il nome e lo stato da ricercare" );
+            }
 
         } catch (RemoteException e) {
-
+            showAlert(Alert.AlertType.ERROR, "Errore di ricerca", "An error occurred while searching: " + e.getMessage());
         }
     }
 
+
     @FXML
-    private void cercaAreaGeograficaCoordinate(){
-        try{
-            double latitudine = Double.parseDouble(latitudeField.getText());
-            double longitudine = Double.parseDouble(longitudeField.getText());
+    private void cercaAreaGeograficaCoordinate() throws RemoteException {
+       try{
+           if(latitudeField.getText().isEmpty() || longitudeField.getText().isEmpty()){
+               showAlert(Alert.AlertType.INFORMATION, "RICERCA PER COORDINATE", "Inserire le coordinate da ricercare");
+               return;
+           }
 
-            //richiamo il service per cercare tramite coordinate
-           // List<CoordinateMonitoraggio> res = ClientCM.getService().cercaAreaGeograficaCoordinate(latitudine,longitudine);
+           double latitudine = Double.parseDouble(latitudeField.getText());
+           double longitudine = Double.parseDouble(longitudeField.getText());
 
-          //  displaySearchResults(res);
-
-        } catch (NumberFormatException e) {
-            System.err.println("formato inserito non corretto, per favore reinserire < "+e.getMessage()+" >");
-       // }catch (RemoteException e1){
-           // System.err.println("ricerca per coordinate non andata a buon fine < "+e1.getMessage()+" >");
-        }
-
+           List<CoordinateMonitoraggio> resC = ClientCM.getService().cercaAreaGeograficaCoordinate(latitudine,longitudine);
+           displaySearchResults(resC);
+       } catch (NumberFormatException e) {
+           showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter valid numbers for latitude and longitude");
+       } catch (RemoteException e) {
+           showAlert(Alert.AlertType.ERROR, "Search Error", "An error occurred while searching: " + e.getMessage());
+       }
     }
 
     private void displaySearchResults(List<CoordinateMonitoraggio> area){
@@ -108,10 +93,28 @@ public class MainController {
         resultsTable.getItems().addAll(area);
     }
 
-    // Metodo per gestire il logout
     @FXML
-    private void handleLogout() {
-        // Esegue il logout e ritorna alla schermata di login
+    private void handleLogin() {
         mainApp.showLoginView();
     }
+
+    public void setLoggedIn(boolean isLoggedIn){
+        operatorMenu.setVisible(isLoggedIn);
+        loginButton.setVisible(isLoggedIn);
+    }
+
+    @FXML
+    private void handleLogout() {
+        operatorMenu.setVisible(false);
+        mainApp.showLoginView();
+    }
+
+    private void showAlert(Alert.AlertType information, String title, String content){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+
 }

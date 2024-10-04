@@ -21,15 +21,17 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
     }
 
     @Override
-    public List<CoordinateMonitoraggio> cercaAreaGeograficaNome(String nome) throws RemoteException {
+    public List<CoordinateMonitoraggio> cercaAreaGeograficaNome(String nome,String stato) throws RemoteException {
         List<CoordinateMonitoraggio> aree = new ArrayList<>();
-        String sql = "SELECT * FROM coordinatemonitoraggio WHERE nome_citta = ?";
+        String sql = "SELECT * FROM coordinatemonitoraggio WHERE nome_citta = ? AND stato = ?";
 
         try {
             Connection conn = dbManager.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setString(1, nome);  // Imposta il parametro 'nome'
+            pstmt.setString(1, nome);
+            pstmt.setString(2, stato);
+
             ResultSet rs = pstmt.executeQuery();
 
             // Itera sui risultati della query
@@ -53,8 +55,8 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
 
 
     @Override
-    public CoordinateMonitoraggio cercaAreaGeograficaCoordinate(Double latitudine, Double longitudine) throws RemoteException {
-        CoordinateMonitoraggio area = null;
+    public   List<CoordinateMonitoraggio> cercaAreaGeograficaCoordinate(Double latitudine, Double longitudine) throws RemoteException {
+        List<CoordinateMonitoraggio> aree = null;
         String sql = "SELECT * FROM coordinatemonitoraggio WHERE latitudine = ? AND longitudine = ?";
 
         try {
@@ -68,7 +70,7 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                area = new CoordinateMonitoraggio();
+                CoordinateMonitoraggio area = new CoordinateMonitoraggio();
                 area.setId(rs.getInt("id"));
                 area.setNome_citta(rs.getString("nome_citta"));
                 area.setStato(rs.getString("stato"));
@@ -80,7 +82,7 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
             e.printStackTrace();
         }
 
-        return area;  // Ritorna l'area trovata (o null se non trovata)
+        return aree;  // Ritorna l'area trovata (o null se non trovata)
     }
 
 
