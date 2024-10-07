@@ -1,6 +1,10 @@
 package com.climatemonitoring.model;
 
-public class OperatoriRegistrati {
+import java.io.Serializable;
+
+public class OperatoriRegistrati implements Serializable {
+    private static final long serialVersionUID=1l;
+
     private int id;
     private String nome;
     private String cognome;
@@ -17,6 +21,10 @@ public class OperatoriRegistrati {
         this.email = email;
         this.userid = userid;
         this.password = password;
+    }
+
+    public OperatoriRegistrati(){
+
     }
 
     public int getId() {

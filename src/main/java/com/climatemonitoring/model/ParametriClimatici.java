@@ -1,8 +1,12 @@
 package com.climatemonitoring.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ParametriClimatici {
+public class ParametriClimatici implements Serializable {
+
+    private static final long serialVersionUID=1l;
+
     private int id;
     private Date data_rilevazione;
     private int vento;

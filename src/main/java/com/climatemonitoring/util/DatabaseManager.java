@@ -26,6 +26,23 @@ public class DatabaseManager {
         }
     }
 
+    public static void main(String[] args) {
+        DatabaseManager dbManager = DatabaseManager.getInstance();
+        try {
+            Connection conn = dbManager.getConnection();
+            if (conn != null) {
+                System.out.println("Connection to the database was successful!");
+            } else {
+                System.out.println("Failed to connect to the database.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            dbManager.closeConnection();
+        }
+    }
+
+
     public static synchronized DatabaseManager getInstance() {
         if (instance == null) {
             instance = new DatabaseManager();
@@ -105,4 +122,5 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
+
 }

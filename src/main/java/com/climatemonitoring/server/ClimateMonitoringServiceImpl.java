@@ -21,7 +21,7 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
     }
 
     @Override
-    public List<CoordinateMonitoraggio> cercaAreaGeograficaNome(String nome,String stato) throws RemoteException {
+    public List<CoordinateMonitoraggio> cercaAreaGeograficaNome(String nome, String stato) throws RemoteException {
         List<CoordinateMonitoraggio> aree = new ArrayList<>();
         String sql = "SELECT * FROM coordinatemonitoraggio WHERE nome_citta = ? AND stato = ?";
 
@@ -32,25 +32,27 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
             pstmt.setString(1, nome);
             pstmt.setString(2, stato);
 
-            ResultSet rs = pstmt.executeQuery();
+            try {
+                ResultSet rs = pstmt.executeQuery();
 
-            // Itera sui risultati della query
-            while (rs.next()) {
-                CoordinateMonitoraggio area = new CoordinateMonitoraggio();
-                area.setId(rs.getInt("id"));
-                area.setNome_citta(rs.getString("nome_citta"));
-                area.setStato(rs.getString("stato"));
-                area.setPaese(rs.getString("paese"));
-                area.setLatitudine(rs.getDouble("latitudine"));
-                area.setLongitudine(rs.getDouble("longitudine"));
-
-                // Aggiunge l'area alla lista
-                aree.add(area);
+                while (rs.next()) {
+                    CoordinateMonitoraggio area = new CoordinateMonitoraggio(
+                            rs.getInt("id"),
+                            rs.getString("nome_citta"),
+                            rs.getString("stato"),
+                            rs.getString("paese"),
+                            rs.getDouble("latitudine"),
+                            rs.getDouble("longitudine")
+                    );
+                    aree.add(area);
+                }
+            } catch (Exception e) {
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RemoteException("Errore durante la ricerca delle aree geografiche", e);
         }
         return aree;  // Ritorna la lista delle aree trovate
+
     }
 
 
@@ -72,7 +74,7 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
             if (rs.next()) {
                 CoordinateMonitoraggio area = new CoordinateMonitoraggio();
                 area.setId(rs.getInt("id"));
-                area.setNome_citta(rs.getString("nome_citta"));
+                area.setNomeCitta(rs.getString("nome_citta"));
                 area.setStato(rs.getString("stato"));
                 area.setPaese(rs.getString("paese"));
                 area.setLatitudine(rs.getDouble("latitudine"));
@@ -87,15 +89,16 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
 
 
     @Override
-    public String visualizzaAreaGeografica(int nome) throws RemoteException {
-        String sql = "SELECT * FROM coordinatemonitoraggio WHERE id = ?";
+    public String visualizzaAreaGeografica(String nome, String stato) throws RemoteException {
+        String sql = "SELECT * FROM coordinatemonitoraggio WHERE nome = ? AND stato = ?";
         StringBuilder result = new StringBuilder();
 
         try{
             Connection conn = dbManager.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setInt(1, nome);
+            pstmt.setString(1, nome);
+            pstmt.setString(2,stato);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
@@ -133,9 +136,14 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                result.append("Nome Area: ").append(rs.getString("nome")).append("\n");
-                result.append("Descrizione: ").append(rs.getString("descrizione")).append("\n");
-                result.append("Centro di Monitoraggio: ").append(rs.getString("centro_nome")).append("\n");
+                result.append("ID: ").append(rs.getInt("id")).append("\n");
+                result.append("Nome: ").append(rs.getString("nome_citta")).append("\n");
+                result.append("centro monitoraggio id: ").append(rs.getString("centro_monitoragggio_id")).append("\n");
+                result.append("operatore id: ").append(rs.getString("operatore_id")).append("\n");
+                result.append("stato: ").append(rs.getDouble("stato")).append("\n");
+                result.append("paese: ").append(rs.getDouble("paese")).append("\n");
+                result.append("Latitudine: ").append(rs.getDouble("latitudine")).append("\n");
+                result.append("Longitudine: ").append(rs.getDouble("longitudine")).append("\n");
             } else {
                 result.append("Area non trovata.");
             }
@@ -274,7 +282,7 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
             while (rs.next()) {
                 CoordinateMonitoraggio area = new CoordinateMonitoraggio();
                 area.setId(rs.getInt("id"));
-                area.setNome_citta( rs.getString("nome"));
+                area.setNomeCitta( rs.getString("nome"));
                 area.setLatitudine(rs.getDouble("latitudine"));
                 area.setLongitudine(rs.getDouble("longitudine"));
 

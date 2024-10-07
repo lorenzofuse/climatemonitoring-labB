@@ -2,9 +2,10 @@ package com.climatemonitoring.client;
 
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.Border;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import com.climatemonitoring.shared.ClimateMonitoringService;
@@ -13,7 +14,7 @@ import java.io.IOException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class ClientCM extends Application{
+public class ClientCM extends Application {
 
     private static ClimateMonitoringService service;
     private Stage primaryStage;
@@ -24,17 +25,32 @@ public class ClientCM extends Application{
     public void start(Stage stage) throws Exception {
         this.primaryStage = stage;
         this.primaryStage.setTitle("ClimateMonitoring");
-        initRMIService();
-        initRootLayout();
-        showLoginView();
+        if (initRMIService()) {
+            initRootLayout();
+            showLoginView();
+        } else {
+            // Se la connessione RMI fallisce, mostra un errore e chiudi l'applicazione
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Errore di Connessione");
+                alert.setHeaderText("Impossibile connettersi al server");
+                alert.setContentText("Assicurati che il server sia in esecuzione e riprova.");
+                alert.showAndWait();
+                Platform.exit();
+            });
+        }
     }
 
-    private void initRMIService(){
+    private boolean initRMIService(){
         try{
             Registry reg = LocateRegistry.getRegistry("localhost",1099);
             service = (ClimateMonitoringService) reg.lookup("ClimateMonitoringService");
+            System.out.println("Connesione RMI stabilita con successo");
+            return true;
         } catch (Exception e) {
-            System.err.println("Error initRMIService < "+e.getMessage()+" >");
+            System.err.println("Error durante la connessione RMI < "+e.getMessage()+" >");
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -50,23 +66,8 @@ public class ClientCM extends Application{
         }
     }
 
-    public void showMainView() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
-            BorderPane mainView = loader.load();
-            rootLayout.setCenter(mainView);
-
-            // Collegamento al controller della vista principale
-            MainController controller = loader.getController();
-            controller.setMainApp(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void showLoginView() {
         try {
-            // Correggiamo il percorso rimuovendo le virgolette extra e usando lo slash corretto
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
             BorderPane loginView = loader.load();
             rootLayout.setCenter(loginView);
@@ -77,6 +78,20 @@ public class ClientCM extends Application{
             e.printStackTrace();
         }
     }
+
+    public void showMainView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
+            BorderPane mainView = loader.load();
+            rootLayout.setCenter(mainView);
+
+            MainController controller = loader.getController();
+            controller.setMainApp(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static ClimateMonitoringService getService() {
         return service;
     }

@@ -9,9 +9,10 @@ import java.util.List;
 
 public interface ClimateMonitoringService extends Remote {
     List<CoordinateMonitoraggio> cercaAreaGeograficaNome(String nome, String stato) throws RemoteException;
+
     List<CoordinateMonitoraggio> cercaAreaGeograficaCoordinate(Double latitudine, Double longitudine) throws RemoteException;
 
-    String visualizzaAreaGeografica(int nome) throws RemoteException; //display tab coordinatemonitoraggio (cerca i paesi dentro il file fornito dal prof)
+    String visualizzaAreaGeografica(String nome, String stato) throws RemoteException; //display tab coordinatemonitoraggio (cerca i paesi dentro il file fornito dal prof)
 
     String visualizzaAreaCentroMonitoraggio(int areaId) throws RemoteException; //display area dentro centromonitoraggio (cerca dalle aree che l'operatore crea)
 

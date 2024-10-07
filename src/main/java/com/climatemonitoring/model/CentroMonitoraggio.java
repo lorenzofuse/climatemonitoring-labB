@@ -1,6 +1,12 @@
 package com.climatemonitoring.model;
 
-public class CentroMonitoraggio {
+import java.io.Serializable;
+
+public class CentroMonitoraggio implements Serializable {
+
+    private static final long serialVersionUID=1l;
+
+
     private int id;
     private String nome;
     private String indirizzo;

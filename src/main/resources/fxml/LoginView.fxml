@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.climatemonitoring.client.LoginController">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+            fx:controller="com.climatemonitoring.client.LoginController">
     <center>
-        <VBox spacing="10" alignment="CENTER">
-            <Label text="Climate Monitoring - Login" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
-            <TextField fx:id="usernameField" promptText="Username"/>
+        <VBox alignment="CENTER" spacing="10">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            </padding>
+            <Label text="Climate Monitoring System" style="-fx-font-size: 20px;"/>
+            <TextField fx:id="userIdField" promptText="Username"/>
             <PasswordField fx:id="passwordField" promptText="Password"/>
-            <HBox spacing="10" alignment="CENTER">
-                <Button text="Login" onAction="#handleLogin"/>
-                <Button text="Register" onAction="#handleRegister"/>
-                <Button text="Continue as Guest" onAction="#handleCitizen"/>
-            </HBox>
+            <Button fx:id="loginButton" text="Login" maxWidth="Infinity"/>
+            <Button fx:id="guestButton" text="Continua come ospite" maxWidth="Infinity"/>
         </VBox>
     </center>
 </BorderPane>
