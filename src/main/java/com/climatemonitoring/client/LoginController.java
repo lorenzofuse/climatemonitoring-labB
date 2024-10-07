@@ -58,7 +58,7 @@ public class LoginController {
     }
 
     @FXML
-    private void showRegistrationDialog(){
+    private void showRegistrationDialog() {
         Dialog<OperatoriRegistrati> dialog = new Dialog<>();
         dialog.setTitle("Registrazione nuovo operatore");
         dialog.setHeaderText("Inserisci i tuoi dati per registrarti");
@@ -78,8 +78,6 @@ public class LoginController {
         newUserIdField.setPromptText("User ID");
         PasswordField newPasswordField = new PasswordField();
         newPasswordField.setPromptText("Password");
-        TextField centroMonitoraggioIdField = new TextField();
-        centroMonitoraggioIdField.setPromptText("ID Centro Monitoraggio");
 
         content.getChildren().addAll(
                 new Label("Nome:"), nomeField,
@@ -87,8 +85,7 @@ public class LoginController {
                 new Label("Codice Fiscale:"), codiceFiscaleField,
                 new Label("Email:"), emailField,
                 new Label("User ID:"), newUserIdField,
-                new Label("Password:"), newPasswordField,
-                new Label("ID Centro Monitoraggio:"), centroMonitoraggioIdField
+                new Label("Password:"), newPasswordField
         );
 
         dialog.getDialogPane().setContent(content);
@@ -96,23 +93,20 @@ public class LoginController {
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == registraButtonType) {
                 try {
-                    OperatoriRegistrati nuovoOperatore = new OperatoriRegistrati(
-                            0, // l'ID verrà assegnato dal database
-                            nomeField.getText(),
-                            cognomeField.getText(),
-                            codiceFiscaleField.getText(),
-                            emailField.getText(),
-                            newUserIdField.getText(),
-                            newPasswordField.getText(),
-                            Integer.parseInt(centroMonitoraggioIdField.getText())
-                    );
+                    String nome = nomeField.getText();
+                    String cognome = cognomeField.getText();
+                    String codiceFiscale = codiceFiscaleField.getText();
+                    String email = emailField.getText();
+                    String userId = newUserIdField.getText();
+                    String password = newPasswordField.getText();
 
-                    boolean registrationSuccess = ClientCM.getService().registraOperatore(nuovoOperatore);
+                    // Chiamata al metodo di registrazione che assegna automaticamente l'ID del centro di monitoraggio
+                    boolean registrationSuccess = ClientCM.getService().registrazione(nome, cognome, codiceFiscale, email, userId, password);
                     if (registrationSuccess) {
                         showAlert(Alert.AlertType.INFORMATION, "Registrazione Completata",
                                 "Registrazione avvenuta con successo",
                                 "Puoi ora effettuare il login con le tue credenziali.");
-                        return nuovoOperatore;
+                        return new OperatoriRegistrati(0, nome, cognome, codiceFiscale, email, userId, password); // L'ID del centro verrà assegnato dal server
                     } else {
                         showAlert(Alert.AlertType.ERROR, "Errore Registrazione",
                                 "Registrazione fallita",
@@ -124,11 +118,6 @@ public class LoginController {
                             "Errore del Server",
                             "Si è verificato un errore durante la registrazione: " + e.getMessage());
                     return null;
-                } catch (NumberFormatException e) {
-                    showAlert(Alert.AlertType.ERROR, "Errore Dati",
-                            "ID Centro Monitoraggio non valido",
-                            "Inserisci un numero valido per l'ID del Centro Monitoraggio.");
-                    return null;
                 }
             }
             return null;
@@ -136,7 +125,6 @@ public class LoginController {
 
         dialog.showAndWait();
     }
-
 
 
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {

@@ -158,13 +158,15 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
 
 
     @Override
-    public boolean registrazione(String nome, String cognome, String codiceFiscale, String email, String userId, String password, int centroMonitoraggioId) throws RemoteException {
-        String sql = "INSERT INTO operatoriregistrati (nome, cognome, codice_fiscale, email, userid, password, centro_monitoraggio_id) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public boolean registrazione(String nome, String cognome, String codiceFiscale, String email, String userId, String password) throws RemoteException {
+        String sql = "INSERT INTO operatoriregistrati (nome, cognome, codice_fiscale, email, userid, password) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
             Connection conn = dbManager.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            int centromonitoraggioid = getNextCentroMonitoraggio(conn);
 
             pstmt.setString(1, nome);
             pstmt.setString(2, cognome);
@@ -172,7 +174,6 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
             pstmt.setString(4, email);
             pstmt.setString(5, userId);
             pstmt.setString(6, password);
-            pstmt.setInt(7, centroMonitoraggioId);
 
             int rowsAffected = pstmt.executeUpdate();
 
@@ -181,6 +182,27 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
         } catch (SQLException e) {
             throw new RemoteException("Errore durante la registrazione", e);
         }
+    }
+
+    //metodo per incrementare gli id, il primo operatore che si registra è l'1, il secondo il 2 ecc
+    private int getNextCentroMonitoraggio(Connection conn) throws SQLException{
+        String sql = "SELECT COALESCE(MAX(centro_monitoraggio_id), 0) + 1 AS next_id FROM operatoriregistrati";
+        try {
+            PreparedStatement ptsmt = conn.prepareStatement(sql);
+            ResultSet rs = ptsmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+        }catch(Exception e) {}
+        return 1; //default se non entra
+    }
+
+    //metodo per verificare che il codice fiscale sia corretto
+    public boolean isValidCF(String cf){
+        if(cf==null || !cf.matches("^[A-Z]{6}[0-9]{2}[ABCDEHLMPRST][0-9]{2}[A-Z][0-9]{3}[A-Z]$")){
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -225,8 +247,7 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
                             rs.getString("codice_fiscale"),
                             rs.getString("email"),
                             rs.getString("userid"),
-                            rs.getString("password"),
-                            rs.getInt("centro_monitoraggio_id")
+                            rs.getString("password")
                     );
                 }
                 return null;
@@ -332,7 +353,6 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
             pstmt.setString(4, operatore.getEmail());
             pstmt.setString(5, operatore.getUserid());
             pstmt.setString(6, operatore.getPassword());
-            pstmt.setInt(7, operatore.getCentromonitoraggioId());
 
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
