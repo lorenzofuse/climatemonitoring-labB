@@ -16,6 +16,7 @@
             <PasswordField fx:id="passwordField" promptText="Password"/>
             <Button fx:id="loginButton" text="Login" maxWidth="Infinity"/>
             <Button fx:id="guestButton" text="Continua come ospite" maxWidth="Infinity"/>
+            <Button fx:id="registerButton" text="Registrati" onAction="#showRegistrationDialog" />
         </VBox>
     </center>
 </BorderPane>

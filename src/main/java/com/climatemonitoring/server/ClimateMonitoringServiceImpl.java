@@ -1,5 +1,6 @@
 package com.climatemonitoring.server;
 
+import com.climatemonitoring.model.OperatoriRegistrati;
 import com.climatemonitoring.shared.ClimateMonitoringService;
 import com.climatemonitoring.util.DatabaseManager;
 import com.climatemonitoring.model.CoordinateMonitoraggio;
@@ -183,6 +184,59 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
     }
 
     @Override
+    public boolean verificaUser(String userId, String password) throws RemoteException {
+        String sql = "SELECT * FROM operatoriregistrati WHERE userid = ? AND password = ?";
+
+        try{
+            Connection conn = dbManager.getConnection();
+            PreparedStatement ptsmt = conn.prepareStatement(sql);
+
+            ptsmt.setString(1,userId);
+            ptsmt.setString(2,password);
+
+            try{
+                ResultSet rs = ptsmt.executeQuery();
+                return rs.next();
+            }catch (Exception e1){
+                e1.printStackTrace();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error verifying user"+e.getMessage());
+        }
+        return false;
+    }
+
+
+    @Override
+    public OperatoriRegistrati getUserById(String userId) throws RemoteException {
+        String sql = "SELECT * FROM operatoriregistrati WHERE userid = ?";
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, userId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return new OperatoriRegistrati(
+                            rs.getInt("id"),
+                            rs.getString("nome"),
+                            rs.getString("cognome"),
+                            rs.getString("codice_fiscale"),
+                            rs.getString("email"),
+                            rs.getString("userid"),
+                            rs.getString("password"),
+                            rs.getInt("centro_monitoraggio_id")
+                    );
+                }
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new RemoteException("Error retrieving user", e);
+        }
+    }
+
+    @Override
     public boolean creaCentroMonitoraggio(String nome, String indirizzo, String cap, String comune, String provincia, int operatoreId) throws RemoteException {
         String sql = "INSERT INTO centriMonitoraggio (nome, indirizzo, cap, comune, provincia, operatore_id) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -261,6 +315,29 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    @Override
+    public boolean registraOperatore(OperatoriRegistrati operatore) throws RemoteException {
+        String sql = "INSERT INTO operatoriregistrati (nome, cognome, codice_fiscale, email, userid, password, centro_monitoraggio_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, operatore.getNome());
+            pstmt.setString(2, operatore.getCognome());
+            pstmt.setString(3, operatore.getCodice_fiscale());
+            pstmt.setString(4, operatore.getEmail());
+            pstmt.setString(5, operatore.getUserid());
+            pstmt.setString(6, operatore.getPassword());
+            pstmt.setInt(7, operatore.getCentromonitoraggioId());
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            throw new RemoteException("Errore durante la registrazione dell'operatore", e);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.climatemonitoring.shared;
 
 import com.climatemonitoring.model.CoordinateMonitoraggio;
+import com.climatemonitoring.model.OperatoriRegistrati;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -18,6 +19,10 @@ public interface ClimateMonitoringService extends Remote {
 
     boolean registrazione(String nome, String cognome,String codiceFiscale, String email,String userId, String password, int centroMonitoraggioId) throws RemoteException;
 
+    boolean verificaUser(String userId, String password) throws RemoteException;
+
+    OperatoriRegistrati getUserById(String userId) throws RemoteException;
+
     boolean creaCentroMonitoraggio(String nome, String indirizzo, String cap, String comune, String provincia, int operatoreId) throws RemoteException;
 
     boolean inserisciParametriClimatici(int centroMonitoraggioId, int areaInteresseId, Date dataRilevazione,
@@ -25,6 +30,8 @@ public interface ClimateMonitoringService extends Remote {
                                         int precipitazioni, int altitudine, int massaGhiacciai, String note) throws RemoteException;
 
     boolean autenticaOperatore(String userId, String password) throws RemoteException;
+
+    boolean registraOperatore(OperatoriRegistrati operatore) throws RemoteException;
 
     List<CoordinateMonitoraggio> getAreePerCentroMonitoraggio(int centroMonitoraggioId) throws RemoteException;
 }

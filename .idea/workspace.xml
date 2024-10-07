@@ -4,20 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="riprendere con l'implementazione lato client&#10;Capire come gestire le varie view&#10;Implementato dentro CoordinateMonitoraggioo il binding delle proprietà per usare javafx con le table view">
+    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="Collegamento server client e db funziona, implementata correttamente cerca per nome e stato, riprendere implementaizone client e ui">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/ClientCM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/ClientCM.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CentroMonitoraggio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CentroMonitoraggio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CoordinateMonitoraggio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CoordinateMonitoraggio.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/OperatoriRegistrati.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/OperatoriRegistrati.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/ParametriClimatici.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/ParametriClimatici.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/shared/ClimateMonitoringService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/shared/ClimateMonitoringService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/util/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/util/DatabaseManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/LoginView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/LoginView.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainView.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,8 +131,27 @@
       <option name="project" value="LOCAL" />
       <updated>1728025615379</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Collegamento server client e db funziona, implementata correttamente cerca per nome e stato, riprendere implementaizone client e ui">
+      <option name="closed" value="true" />
+      <created>1728326565377</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1728326565377</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="modifiche relative al server multiclient" />
@@ -147,6 +159,7 @@
     <MESSAGE value="ulteriori modifiche relative al commit precedente" />
     <MESSAGE value="Implementazione UI per il client con i relativi metodi java fx e file fxml&#10;Per il momento l'interfaccia grafica funziona, ha due pagine login e main&#10;Modificarle per adattarle al progetto e bisogna implementare i vari mmetodi relativi ad essi" />
     <MESSAGE value="riprendere con l'implementazione lato client&#10;Capire come gestire le varie view&#10;Implementato dentro CoordinateMonitoraggioo il binding delle proprietà per usare javafx con le table view" />
-    <option name="LAST_COMMIT_MESSAGE" value="riprendere con l'implementazione lato client&#10;Capire come gestire le varie view&#10;Implementato dentro CoordinateMonitoraggioo il binding delle proprietà per usare javafx con le table view" />
+    <MESSAGE value="Collegamento server client e db funziona, implementata correttamente cerca per nome e stato, riprendere implementaizone client e ui" />
+    <option name="LAST_COMMIT_MESSAGE" value="Collegamento server client e db funziona, implementata correttamente cerca per nome e stato, riprendere implementaizone client e ui" />
   </component>
 </project>

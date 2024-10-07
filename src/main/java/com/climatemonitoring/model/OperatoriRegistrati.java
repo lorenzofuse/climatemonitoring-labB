@@ -12,8 +12,9 @@ public class OperatoriRegistrati implements Serializable {
     private String email;
     private String userid;
     private String password;
+    private int centromonitoraggioId;
 
-    public OperatoriRegistrati(int id, String nome, String cognome, String codice_fiscale, String email, String userid, String password) {
+    public OperatoriRegistrati(int id, String nome, String cognome, String codice_fiscale, String email, String userid, String password, int centromonitoraggioId) {
         this.id = id;
         this.nome = nome;
         this.cognome = cognome;
@@ -21,11 +22,10 @@ public class OperatoriRegistrati implements Serializable {
         this.email = email;
         this.userid = userid;
         this.password = password;
+        this.centromonitoraggioId=centromonitoraggioId;
     }
 
-    public OperatoriRegistrati(){
 
-    }
 
     public int getId() {
         return id;
@@ -81,5 +81,13 @@ public class OperatoriRegistrati implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getCentromonitoraggioId() {
+        return centromonitoraggioId;
+    }
+
+    public void setCentromonitoraggioId(int centromonitoraggioId) {
+        this.centromonitoraggioId = centromonitoraggioId;
     }
 }
