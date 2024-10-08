@@ -9,7 +9,7 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
             fx:controller="com.climatemonitoring.client.LoginController"
-            stylesheets="@styles.css">
+            stylesheets="/fxml/styles.css">
     <top>
         <HBox alignment="CENTER" style="-fx-background-color: #4CAF50;">
             <padding>

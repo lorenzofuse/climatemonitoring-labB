@@ -59,6 +59,7 @@ public class ClientCM extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RootLayout.fxml"));
             rootLayout = loader.load();
             Scene scene = new Scene(rootLayout);
+
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {

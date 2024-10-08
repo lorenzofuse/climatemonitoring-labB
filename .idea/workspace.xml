@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="collegamento per il login e registrazione effettuata a livello di codice&#10;creazione primo operatore&#10;Proseguire con la logica dell'app">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/fxml/styles.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/climate-icon.png" afterDir="false" />
+    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="Apportate modifiche all'ui per l'avvio dell'app alla prima view&#10;inserito all'interno della view dell'operatore registrato le varie possibilità di ricerca (Per ora implementato correttamente solo ricerca nome,stato (da cambiare in paese AZ -&gt; Azerbaijan)&#10;e implementare i restanti metodi mancanti dentro MainController">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/ClientCM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/ClientCM.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/LoginView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/LoginView.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainView.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,7 +141,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728340381464</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Apportate modifiche all'ui per l'avvio dell'app alla prima view&#10;inserito all'interno della view dell'operatore registrato le varie possibilità di ricerca (Per ora implementato correttamente solo ricerca nome,stato (da cambiare in paese AZ -&gt; Azerbaijan)&#10;e implementare i restanti metodi mancanti dentro MainController">
+      <option name="closed" value="true" />
+      <created>1728379936391</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1728379936392</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -155,7 +158,8 @@
     <MESSAGE value="Implementazione rmi completata&#10;completamento dei service contenente i metodi da implementare dentro la classe ClimateMonitoringServiceImpl sviluppando le query da usare per poter comunicare con il db&#10;Creazione classe ServerCM e ClientCM per poter tentare la comunicazione, funziona" />
     <MESSAGE value="Miglioramento implementazione javafx, risolvere problemi legati ai bottoni&#10;Non funzionano" />
     <MESSAGE value="collegamento per il login e registrazione effettuata a livello di codice&#10;creazione primo operatore&#10;Proseguire con la logica dell'app" />
-    <option name="LAST_COMMIT_MESSAGE" value="collegamento per il login e registrazione effettuata a livello di codice&#10;creazione primo operatore&#10;Proseguire con la logica dell'app" />
+    <MESSAGE value="Apportate modifiche all'ui per l'avvio dell'app alla prima view&#10;inserito all'interno della view dell'operatore registrato le varie possibilità di ricerca (Per ora implementato correttamente solo ricerca nome,stato (da cambiare in paese AZ -&gt; Azerbaijan)&#10;e implementare i restanti metodi mancanti dentro MainController" />
+    <option name="LAST_COMMIT_MESSAGE" value="Apportate modifiche all'ui per l'avvio dell'app alla prima view&#10;inserito all'interno della view dell'operatore registrato le varie possibilità di ricerca (Per ora implementato correttamente solo ricerca nome,stato (da cambiare in paese AZ -&gt; Azerbaijan)&#10;e implementare i restanti metodi mancanti dentro MainController" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
