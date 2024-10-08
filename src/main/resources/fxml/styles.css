@@ -1,0 +1,47 @@
+.root {
+    -fx-background-color: #F5F5F5;
+}
+
+.header-label {
+    -fx-font-size: 24px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.content-box {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+
+.input-field {
+    -fx-pref-width: 200px;
+    -fx-pref-height: 35px;
+    -fx-font-size: 14px;
+}
+
+.primary-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-pref-height: 35px;
+}
+
+.primary-button:hover {
+    -fx-background-color: #45a049;
+}
+
+.secondary-button {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333333;
+    -fx-pref-height: 35px;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.footer-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666666;
+}

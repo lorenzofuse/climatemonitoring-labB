@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-            fx:controller="com.climatemonitoring.client.MainController">
-    <top>
-        <HBox spacing="10" alignment="CENTER">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
-            <TextField fx:id="searchField" promptText="Nome città" HBox.hgrow="ALWAYS"/>
-            <TextField fx:id="stateField" promptText="Stato" HBox.hgrow="ALWAYS"/>
-            <Button fx:id="searchButton" text="Cerca"/>
-        </HBox>
-    </top>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.climatemonitoring.client.MainController">
+    <left>
+        <VBox spacing="10" style="-fx-background-color: #f0f0f0; -fx-padding: 10;">
+            <Button text="Ricerca per nome" onAction="#handleSearchNome"/>
+            <Button text="Ricerca per lat/lon" onAction="#handleSearchByCoordinates"/>
+            <Button text="Visualizza per clima" onAction="#handleViewByClimate"/>
+            <Button text="Operatore" onAction="#handleOperatorMenu"/>
+        </VBox>
+    </left>
+
     <center>
-        <TextArea fx:id="resultArea" editable="false" wrapText="true">
-            <BorderPane.margin>
-                <Insets top="0" right="20" bottom="20" left="20"/>
-            </BorderPane.margin>
-        </TextArea>
+        <StackPane fx:id="contentArea">
+            <VBox spacing="10" alignment="CENTER">
+                <TextField fx:id="searchField" promptText="Inserisci il nome della città"/>
+                <TextField fx:id="stateField" promptText="Inserisci lo stato"/>
+                <Button fx:id="searchButton" text="Cerca" onAction="#handleSearchNome"/>
+                <TextArea fx:id="resultArea" editable="false" wrapText="true"/>
+            </VBox>
+        </StackPane>
     </center>
 </BorderPane>

@@ -29,6 +29,7 @@ public class LoginController {
 
     }
 
+    @FXML
     private void handleLogin() {
         String userId = userIdField.getText().trim();
         String password = passwordField.getText().trim();
@@ -51,8 +52,7 @@ public class LoginController {
                     "Si è verificato un errore durante il login: " + e.getMessage());
         }
     }
-
-
+    @FXML
     private void handleGuestLogin() {
         mainApp.showMainView();
     }
@@ -99,6 +99,12 @@ public class LoginController {
                     String email = emailField.getText();
                     String userId = newUserIdField.getText();
                     String password = newPasswordField.getText();
+
+                    // Controllo che tutti i campi siano pieni prima di procedere
+                    if (nome.isEmpty() || cognome.isEmpty() || codiceFiscale.isEmpty() || email.isEmpty() || userId.isEmpty() || password.isEmpty()) {
+                        showAlert(Alert.AlertType.ERROR, "Errore Registrazione", "Campi vuoti", "Compila tutti i campi per registrarti.");
+                        return null;
+                    }
 
                     // Chiamata al metodo di registrazione che assegna automaticamente l'ID del centro di monitoraggio
                     boolean registrationSuccess = ClientCM.getService().registrazione(nome, cognome, codiceFiscale, email, userId, password);

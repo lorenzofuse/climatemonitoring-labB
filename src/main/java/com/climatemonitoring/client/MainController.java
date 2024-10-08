@@ -2,6 +2,7 @@ package com.climatemonitoring.client;
 
 
 import com.climatemonitoring.model.CoordinateMonitoraggio;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -27,15 +28,16 @@ public class MainController {
     // Metodo di inizializzazione chiamato automaticamente dopo il caricamento del file FXML
     @FXML
     private void initialize() {
-       searchButton.setOnAction(event -> handleSearch());
+       searchButton.setOnAction(event -> handleSearchNome());
     }
 
-    private void handleSearch() {
+    @FXML
+    private void handleSearchNome() {
         String cityName = searchField.getText().trim();
         String stateName = stateField.getText().trim();
 
         if (cityName.isEmpty() || stateName.isEmpty()) {
-            showAlert("Errore di Ricerca", "Campi vuoti", "Inserisci sia la città che lo stato.");
+            showAlert(Alert.AlertType.ERROR,"Errore di Ricerca", "Campi vuoti", "Inserisci sia la città che lo stato.");
             return;
         }
 
@@ -58,18 +60,39 @@ public class MainController {
                 resultArea.setText(sb.toString());
             }
         } catch (RemoteException e) {
-            showAlert("Errore di Connessione", "Errore del Server",
+            showAlert(Alert.AlertType.ERROR,"Errore di Connessione", "Errore del Server",
                     "Si è verificato un errore durante la ricerca: " + e.getMessage());
         }
     }
 
-    private void showAlert(String title, String header, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+
+    @FXML
+    private void handleSearchByCoordinates() {
+        // Qui implementeremo la logica per mostrare l'interfaccia di ricerca per coordinate
+        // Per ora, mostriamo solo un messaggio
+        resultArea.setText("Funzionalità di ricerca per coordinate non ancora implementata.");
+    }
+
+    @FXML
+    private void handleViewByClimate() {
+        // Qui implementeremo la logica per visualizzare le aree per clima
+        // Per ora, mostriamo solo un messaggio
+        resultArea.setText("Funzionalità di visualizzazione per clima non ancora implementata.");
+    }
+
+    @FXML
+    private void handleOperatorMenu() {
+        // Qui implementeremo la logica per mostrare il menu dell'operatore
+        // Per ora, mostriamo solo un messaggio
+        resultArea.setText("Menu operatore non ancora implementato.");
+    }
+
+
+    private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
     }
-
-
 }

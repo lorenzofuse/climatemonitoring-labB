@@ -59,6 +59,18 @@
     </dependencies>
 
     <build>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.png</include> <!-- Include i file .png -->
+                    <include>**/*.fxml</include> <!-- Include i file .fxml -->
+                </includes>
+            </resource>
+        </resources>
+
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
