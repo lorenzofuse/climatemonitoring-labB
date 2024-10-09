@@ -1,7 +1,5 @@
 package com.climatemonitoring.util;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,7 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class DatabaseManager {
-    private static final String DB_URL = "jdbc:postgresql://localhost:5433/ClimateMonitoring";
+    //fisso 5433 msi 5432
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/ClimateMonitoring";
     private static final String DB_USER = "postgres";
     private static final String DB_PSW = "postgre";
 

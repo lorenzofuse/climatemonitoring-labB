@@ -4,7 +4,7 @@ module climate.monitoring {
     requires javafx.graphics;
     requires java.rmi;
     requires java.sql;
-    requires com.zaxxer.hikari;
+
 
     // Esporta il pacchetto client per consentire l'accesso da parte di altri moduli
     exports com.climatemonitoring.client;

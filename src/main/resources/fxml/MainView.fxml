@@ -1,26 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.climatemonitoring.client.MainController">
-    <left>
-        <VBox spacing="10" style="-fx-background-color: #f0f0f0; -fx-padding: 10;">
-            <Button text="Ricerca per nome" onAction="#handleSearchNome"/>
-            <Button text="Ricerca per lat/lon" onAction="#handleSearchByCoordinates"/>
-            <Button text="Visualizza per clima" onAction="#handleViewByClimate"/>
-            <Button text="Operatore" onAction="#handleOperatorMenu"/>
-        </VBox>
-    </left>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.climatemonitoring.client.MainController">
+    <top>
+        <HBox styleClass="header" alignment="CENTER_LEFT" spacing="10">
+            <padding>
+                <Insets top="10" right="20" bottom="10" left="20"/>
+            </padding>
+            <Label styleClass="title-text" text="Climate Monitoring System"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="logoutButton" text="Logout" styleClass="secondary-button"/>
+        </HBox>
+    </top>
 
     <center>
-        <StackPane fx:id="contentArea">
-            <VBox spacing="10" alignment="CENTER">
-                <TextField fx:id="searchField" promptText="Inserisci il nome della città"/>
-                <TextField fx:id="stateField" promptText="Inserisci lo stato"/>
-                <Button fx:id="searchButton" text="Cerca" onAction="#handleSearchNome"/>
-                <TextArea fx:id="resultArea" editable="false" wrapText="true"/>
-            </VBox>
-        </StackPane>
+        <TabPane>
+            <Tab text="Cerca per Nome" closable="false">
+                <VBox spacing="15" styleClass="content-pane">
+                    <HBox spacing="10" alignment="CENTER">
+                        <TextField fx:id="searchField" promptText="Nome città" HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="stateField" promptText="Stato" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="searchButton" text="Cerca" styleClass="primary-button"/>
+                    </HBox>
+                    <TextArea fx:id="resultArea" VBox.vgrow="ALWAYS" editable="false" wrapText="true"/>
+                </VBox>
+            </Tab>
+            <Tab text="Cerca per Coordinate" closable="false">
+                <VBox spacing="15" styleClass="content-pane">
+                    <HBox spacing="10" alignment="CENTER">
+                        <TextField fx:id="latitudeField" promptText="Latitudine" HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="longitudeField" promptText="Longitudine" HBox.hgrow="ALWAYS"/>
+                        <Button onAction="#handleSearchByCoordinates" text="Cerca" styleClass="primary-button"/>
+                    </HBox>
+                    <TextArea fx:id="coordinateResultArea" VBox.vgrow="ALWAYS" editable="false" wrapText="true"/>
+                </VBox>
+            </Tab>
+        </TabPane>
     </center>
 </BorderPane>

@@ -86,4 +86,7 @@ public class CoordinateMonitoraggio implements Serializable {
                 ", longitudine=" + longitudine +
                 '}';
     }
+
+    public void add(CoordinateMonitoraggio area) { area.add(area);
+    }
 }

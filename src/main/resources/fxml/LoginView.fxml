@@ -1,43 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-            fx:controller="com.climatemonitoring.client.LoginController"
-            stylesheets="@styles.css">
-    <top>
-        <HBox alignment="CENTER" style="-fx-background-color: #4CAF50;">
-            <padding>
-                <Insets top="20" bottom="20"/>
-            </padding>
-            <Label text="Climate Monitoring System" styleClass="header-label"/>
-        </HBox>
-    </top>
-
+<BorderPane styleClass="login-pane" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.climatemonitoring.client.LoginController">
     <center>
-        <VBox alignment="CENTER" spacing="15" styleClass="content-box">
-            <ImageView fitHeight="500" fitWidth="500" preserveRatio="true">
-                <Image url="@../images/climate-icon.png"/>
-            </ImageView>
-            <TextField fx:id="userIdField" promptText="Username" styleClass="input-field"/>
-            <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field"/>
-            <Button fx:id="loginButton" text="Login" maxWidth="200" styleClass="primary-button" onAction="#handleLogin"/>
-            <Button fx:id="guestButton" text="Continua come ospite" maxWidth="200" styleClass="secondary-button" onAction="#handleGuestLogin"/>
-            <Button fx:id="registerButton" text="Registrati" maxWidth="200" styleClass="secondary-button" onAction="#showRegistrationDialog"/>
+        <VBox alignment="CENTER" spacing="15" maxWidth="400">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Text styleClass="title-text" text="Climate Monitoring System"/>
+
+            <VBox styleClass="login-form" spacing="10">
+                <TextField fx:id="userIdField" promptText="User ID"/>
+                <PasswordField fx:id="passwordField" promptText="Password"/>
+
+                <HBox spacing="10" alignment="CENTER_RIGHT">
+                    <Button fx:id="loginButton" text="Login" styleClass="primary-button"/>
+                    <Button fx:id="registerButton" text="Registrati" styleClass="secondary-button"/>
+                </HBox>
+            </VBox>
+
+            <Separator/>
+
+            <VBox alignment="CENTER" spacing="10">
+                <Text text="Oppure continua come ospite"/>
+                <Button fx:id="guestButton" text="Accesso Ospite" styleClass="guest-button"/>
+            </VBox>
         </VBox>
     </center>
-
-    <bottom>
-        <HBox alignment="CENTER" style="-fx-background-color: #E0E0E0;">
-            <padding>
-                <Insets top="10" bottom="10"/>
-            </padding>
-            <Label text="© 2024 Climate Monitoring System" styleClass="footer-label"/>
-        </HBox>
-    </bottom>
 </BorderPane>

@@ -58,36 +58,73 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
 
 
     @Override
-    public   List<CoordinateMonitoraggio> cercaAreaGeograficaCoordinate(Double latitudine, Double longitudine) throws RemoteException {
-        List<CoordinateMonitoraggio> aree = null;
-        String sql = "SELECT * FROM coordinatemonitoraggio WHERE latitudine = ? AND longitudine = ?";
+    public List<CoordinateMonitoraggio> cercaAreaGeograficaCoordinate(Double latitudine, Double longitudine) throws RemoteException {
+        List<CoordinateMonitoraggio> aree = new ArrayList<>();
+        final double TOLLERANZA = 0.5;
 
-        try {
-            Connection conn = dbManager.getConnection();
+        String sql = "SELECT * FROM coordinatemonitoraggio WHERE latitudine BETWEEN ? - ? AND ? + ? AND longitudine BETWEEN ? - ? AND ? + ? ";
 
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
+            // Settiamo i parametri per il range di ricerca
             pstmt.setDouble(1, latitudine);
-            pstmt.setDouble(2, longitudine);
+            pstmt.setDouble(2, TOLLERANZA);
+            pstmt.setDouble(3, latitudine);
+            pstmt.setDouble(4, TOLLERANZA);
+            pstmt.setDouble(5, longitudine);
+            pstmt.setDouble(6, TOLLERANZA);
+            pstmt.setDouble(7, longitudine);
+            pstmt.setDouble(8, TOLLERANZA);
 
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                CoordinateMonitoraggio area = new CoordinateMonitoraggio();
-                area.setId(rs.getInt("id"));
-                area.setNomeCitta(rs.getString("nome_citta"));
-                area.setStato(rs.getString("stato"));
-                area.setPaese(rs.getString("paese"));
-                area.setLatitudine(rs.getDouble("latitudine"));
-                area.setLongitudine(rs.getDouble("longitudine"));
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    CoordinateMonitoraggio area = new CoordinateMonitoraggio();
+                    area.setId(rs.getInt("id"));
+                    area.setNomeCitta(rs.getString("nome_citta"));
+                    area.setStato(rs.getString("stato"));
+                    area.setPaese(rs.getString("paese"));
+                    area.setLatitudine(rs.getDouble("latitudine"));
+                    area.setLongitudine(rs.getDouble("longitudine"));
+                    aree.add(area);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new RemoteException("Errore durante la ricerca nel database", e);
         }
 
-        return aree;  // Ritorna l'area trovata (o null se non trovata)
+        // Ordiniamo i risultati per distanza dopo averli recuperati
+        if (!aree.isEmpty()) {
+            aree.sort((a1, a2) -> {
+                double dist1 = calcolaDistanzaKm(latitudine, longitudine, a1.getLatitudine(), a1.getLongitudine());
+                double dist2 = calcolaDistanzaKm(latitudine, longitudine, a2.getLatitudine(), a2.getLongitudine());
+                return Double.compare(dist1, dist2);
+            });
+
+            // Limitiamo i risultati ai 5 più vicini
+            if (aree.size() > 5) {
+                aree = aree.subList(0, 5);
+            }
+        }
+
+        return aree;
     }
 
+    private double calcolaDistanzaKm(double lat1, double lon1, double lat2, double lon2) {
+        final int R = 6371; // Raggio della Terra in km
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c;
+    }
 
     @Override
     public String visualizzaAreaGeografica(String nome, String stato) throws RemoteException {
