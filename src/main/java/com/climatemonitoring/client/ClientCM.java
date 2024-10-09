@@ -60,21 +60,13 @@ public class ClientCM extends Application {
             rootLayout = loader.load();
             Scene scene = new Scene(rootLayout);
 
+            //css
+            String csspath = getClass().getResource("/fxml/styles.css").toExternalForm();
+            scene.getStylesheets().add(csspath);
+
+
             primaryStage.setScene(scene);
             primaryStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void showLoginView() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
-            BorderPane loginView = loader.load();
-            rootLayout.setCenter(loginView);
-
-            LoginController controller = loader.getController();
-            controller.setMainApp(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,10 +80,34 @@ public class ClientCM extends Application {
 
             MainController controller = loader.getController();
             controller.setMainApp(this);
+
+            //check sul css caricato
+            if (!primaryStage.getScene().getStylesheets().contains(getClass().getResource("/fxml/styles.css").toExternalForm())) {
+                primaryStage.getScene().getStylesheets().add(getClass().getResource("/fxml/styles.css").toExternalForm());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    public void showLoginView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginView.fxml"));
+            BorderPane loginView = loader.load();
+            rootLayout.setCenter(loginView);
+
+            LoginController controller = loader.getController();
+            controller.setMainApp(this);
+
+            //check sul css caricato
+            if (!primaryStage.getScene().getStylesheets().contains(getClass().getResource("/fxml/styles.css").toExternalForm())) {
+                primaryStage.getScene().getStylesheets().add(getClass().getResource("/fxml/styles.css").toExternalForm());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static ClimateMonitoringService getService() {
         return service;

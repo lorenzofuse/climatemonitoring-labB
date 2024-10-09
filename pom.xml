@@ -16,15 +16,7 @@
         <junit.version>5.9.2</junit.version>
     </properties>
 
-    <!-- HikariCP  -->
     <dependencies>
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>5.0.1</version>
-        </dependency>
-
-
         <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -41,14 +33,12 @@
             <artifactId>javafx-fxml</artifactId>
             <version>17.0.2</version>
         </dependency>
-
         <!-- PostgreSQL JDBC Driver -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.2</version>
         </dependency>
-
         <!-- JUnit for testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -64,8 +54,9 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
-                    <include>**/*.png</include> <!-- Include i file .png -->
-                    <include>**/*.fxml</include> <!-- Include i file .fxml -->
+                    <include>**/*.png</include>
+                    <include>**/*.fxml</include>
+                    <include>**/*.css</include>
                 </includes>
             </resource>
         </resources>

@@ -4,6 +4,7 @@ package com.climatemonitoring.client;
 import com.climatemonitoring.model.CoordinateMonitoraggio;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -29,6 +30,13 @@ public class MainController {
     @FXML
     private void initialize() {
        searchButton.setOnAction(event -> handleSearchNome());
+    }
+
+    private void loadCSS(Scene scene){
+        if(scene!=null){
+            String csspath = getClass().getResource("/fxml/styles.css").toExternalForm();
+            scene.getStylesheets().add(csspath);
+        }
     }
 
     @FXML
