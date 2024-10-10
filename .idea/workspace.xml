@@ -4,17 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="Apportate modifiche all'ui per l'avvio dell'app alla prima view&#10;inserito all'interno della view dell'operatore registrato le varie possibilità di ricerca (Per ora implementato correttamente solo ricerca nome,stato (da cambiare in paese AZ -&gt; Azerbaijan)&#10;e implementare i restanti metodi mancanti dentro MainController">
+    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="Miglioramenti a livello UI generale in tutti i controller&#10;Rimozione requires inutili presenti all'interno del moduleinfo che causavano problemi con l'avvio&#10;Aggiunto metodo per rilevazione della distanza più vicina con le coordinate inserite&#10;Sistemare, se si inserisco delle coordinate a caso, o esce che non ci sono&#10;o da i risultati, per esempio se si inserisce 45 45 da WriteAbortedException">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/ClientCM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/ClientCM.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/LoginController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CoordinateMonitoraggio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CoordinateMonitoraggio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/util/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/util/DatabaseManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/LoginView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/LoginView.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainView.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/RootLayout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/RootLayout.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/styles.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,7 +142,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728379936392</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Miglioramenti a livello UI generale in tutti i controller&#10;Rimozione requires inutili presenti all'interno del moduleinfo che causavano problemi con l'avvio&#10;Aggiunto metodo per rilevazione della distanza più vicina con le coordinate inserite&#10;Sistemare, se si inserisco delle coordinate a caso, o esce che non ci sono&#10;o da i risultati, per esempio se si inserisce 45 45 da WriteAbortedException">
+      <option name="closed" value="true" />
+      <created>1728499346467</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1728499346469</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -168,7 +171,8 @@
     <MESSAGE value="Miglioramento implementazione javafx, risolvere problemi legati ai bottoni&#10;Non funzionano" />
     <MESSAGE value="collegamento per il login e registrazione effettuata a livello di codice&#10;creazione primo operatore&#10;Proseguire con la logica dell'app" />
     <MESSAGE value="Apportate modifiche all'ui per l'avvio dell'app alla prima view&#10;inserito all'interno della view dell'operatore registrato le varie possibilità di ricerca (Per ora implementato correttamente solo ricerca nome,stato (da cambiare in paese AZ -&gt; Azerbaijan)&#10;e implementare i restanti metodi mancanti dentro MainController" />
-    <option name="LAST_COMMIT_MESSAGE" value="Apportate modifiche all'ui per l'avvio dell'app alla prima view&#10;inserito all'interno della view dell'operatore registrato le varie possibilità di ricerca (Per ora implementato correttamente solo ricerca nome,stato (da cambiare in paese AZ -&gt; Azerbaijan)&#10;e implementare i restanti metodi mancanti dentro MainController" />
+    <MESSAGE value="Miglioramenti a livello UI generale in tutti i controller&#10;Rimozione requires inutili presenti all'interno del moduleinfo che causavano problemi con l'avvio&#10;Aggiunto metodo per rilevazione della distanza più vicina con le coordinate inserite&#10;Sistemare, se si inserisco delle coordinate a caso, o esce che non ci sono&#10;o da i risultati, per esempio se si inserisce 45 45 da WriteAbortedException" />
+    <option name="LAST_COMMIT_MESSAGE" value="Miglioramenti a livello UI generale in tutti i controller&#10;Rimozione requires inutili presenti all'interno del moduleinfo che causavano problemi con l'avvio&#10;Aggiunto metodo per rilevazione della distanza più vicina con le coordinate inserite&#10;Sistemare, se si inserisco delle coordinate a caso, o esce che non ci sono&#10;o da i risultati, per esempio se si inserisce 45 45 da WriteAbortedException" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

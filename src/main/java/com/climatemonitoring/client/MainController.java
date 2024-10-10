@@ -2,20 +2,20 @@ package com.climatemonitoring.client;
 
 
 import com.climatemonitoring.model.CoordinateMonitoraggio;
+import com.climatemonitoring.model.OperatoriRegistrati;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 
 import java.rmi.RemoteException;
 import java.util.List;
 
 public class MainController {
 
-    public TextField latitudeField;
+    @FXML public TextField latitudeField;
     @FXML private TextField searchField;
     @FXML private TextField stateField;
     @FXML private TextField longitudeField;
@@ -23,7 +23,10 @@ public class MainController {
     @FXML private TextArea resultArea;
     @FXML private TextArea coordinateResultArea;
     @FXML private Button logoutButton;
+    @FXML private TabPane mainTabPane;
+    @FXML private Tab operatorTab;
 
+    private OperatoriRegistrati currentUser;
     private ClientCM mainApp;
 
     public void setMainApp(ClientCM mainApp) {
@@ -35,8 +38,20 @@ public class MainController {
     private void initialize() {
         searchButton.setOnAction(event -> handleSearchNome());
         logoutButton.setOnAction(event -> handleLogout());
+
+        if(operatorTab!=null){
+            operatorTab.setDisable(true);
+        }
     }
 
+    public void setCurrentUser(OperatoriRegistrati user){
+        this.currentUser = user;
+        if(user != null && operatorTab != null){
+            operatorTab.setDisable(false);
+        } else {
+            operatorTab.setDisable(true);
+        }
+    }
 
     @FXML
     private void handleSearchNome() {
@@ -162,6 +177,176 @@ public class MainController {
 
         return R * c;
     }
+    @FXML
+    private void handleCreateMonitoringCenter(){
+        if(currentUser==null){
+            showAlert(Alert.AlertType.ERROR,"Errore","Accesso negato","Effettua il login come operatore");
+            return;
+        }
+
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Crea centro di monitoraggio");
+        dialog.setHeaderText("Inserisci i dettagli del centro di monitoraggio");
+
+        ButtonType createButtonType = new ButtonType("Crea", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20,150,10,10));
+
+        TextField nomeField = new TextField();
+        TextField indirizzoField = new TextField();
+        TextField capField = new TextField();
+        TextField comuneField = new TextField();
+        TextField provinciaField = new TextField();
+
+        grid.add(new Label("Nome:"), 0, 0);
+        grid.add(nomeField, 1, 0);
+        grid.add(new Label("Indirizzo:"), 0, 1);
+        grid.add(indirizzoField, 1, 1);
+        grid.add(new Label("CAP:"), 0, 2);
+        grid.add(capField, 1, 2);
+        grid.add(new Label("Comune:"), 0, 3);
+        grid.add(comuneField, 1, 3);
+        grid.add(new Label("Provincia:"), 0, 4);
+        grid.add(provinciaField, 1, 4);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == createButtonType) {
+                try {
+                    boolean success = ClientCM.getService().creaCentroMonitoraggio(
+                            nomeField.getText(),
+                            indirizzoField.getText(),
+                            capField.getText(),
+                            comuneField.getText(),
+                            provinciaField.getText(),
+                            currentUser.getId()
+                    );
+
+                    if (success) {
+                        showAlert(Alert.AlertType.INFORMATION, "Successo",
+                                "Centro creato", "Il centro di monitoraggio è stato creato con successo.");
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Errore",
+                                "Creazione fallita", "Non è stato possibile creare il centro di monitoraggio.");
+                    }
+                } catch (RemoteException e) {
+                    showAlert(Alert.AlertType.ERROR, "Errore di connessione",
+                            "Errore del server", "Si è verificato un errore durante la creazione del centro: " + e.getMessage());
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
+    }
+
+    @FXML
+    private void handlInsertClimateData(){
+        if(currentUser == null){
+            showAlert(Alert.AlertType.ERROR,"Errore","Accesso negato","Effettua il login come operatore");
+            return;
+        }
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Inserisci Dati Climatici");
+        dialog.setHeaderText("Inserisci i parametri climatici per un'area");
+
+        ButtonType insertButtonType = new ButtonType("Inserisci", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(insertButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        ComboBox<CoordinateMonitoraggio> areaComboBox = new ComboBox<>();
+        DatePicker dataPicker = new DatePicker();
+        Spinner<Integer> ventoSpinner = new Spinner<>(0, 100, 0);
+        Spinner<Integer> umiditaSpinner = new Spinner<>(0, 100, 0);
+        Spinner<Integer> pressioneSpinner = new Spinner<>(900, 1100, 1000);
+        Spinner<Integer> temperaturaSpinner = new Spinner<>(-50, 50, 20);
+        Spinner<Integer> precipitazioniSpinner = new Spinner<>(0, 500, 0);
+        Spinner<Integer> altitudineSpinner = new Spinner<>(-500, 8000, 0);
+        Spinner<Integer> massaGhiacciaiSpinner = new Spinner<>(0, 10000, 0);
+        TextArea noteArea = new TextArea();
+        noteArea.setPrefRowCount(3);
+
+        try {
+            List<CoordinateMonitoraggio> aree = ClientCM.getService().getAreePerCentroMonitoraggio(currentUser.getId());
+            areaComboBox.getItems().addAll(aree);
+        } catch (RemoteException e) {
+            showAlert(Alert.AlertType.ERROR, "Errore di caricamento",
+                    "Impossibile caricare le aree", "Si è verificato un errore nel caricamento delle aree: " + e.getMessage());
+        }
+
+        grid.add(new Label("Area:"), 0, 0);
+        grid.add(areaComboBox, 1, 0);
+        grid.add(new Label("Data:"), 0, 1);
+        grid.add(dataPicker, 1, 1);
+        grid.add(new Label("Vento:"), 0, 2);
+        grid.add(ventoSpinner, 1, 2);
+        grid.add(new Label("Umidità:"), 0, 2);
+        grid.add(umiditaSpinner, 1, 2);
+        grid.add(new Label("Pressione:"), 0, 2);
+        grid.add(pressioneSpinner, 1, 2);
+        grid.add(new Label("Temperatura:"), 0, 2);
+        grid.add(temperaturaSpinner, 1, 2);
+        grid.add(new Label("Precipitazioni:"), 0, 2);
+        grid.add(precipitazioniSpinner, 1, 2);
+        grid.add(new Label("Altitudine:"), 0, 2);
+        grid.add(altitudineSpinner, 1, 2);
+        grid.add(new Label("Massa Ghiacciai:"), 0, 2);
+        grid.add(massaGhiacciaiSpinner, 1, 2);
+        grid.add(new Label("Note :"), 0, 2);
+        grid.add(noteArea, 1, 2);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == insertButtonType) {
+                CoordinateMonitoraggio selectedArea = areaComboBox.getValue();
+                if (selectedArea == null || dataPicker.getValue() == null) {
+                    showAlert(Alert.AlertType.ERROR, "Dati mancanti",
+                            "Campi obbligatori", "Seleziona un'area e una data.");
+                    return null;
+                }
+
+                try {
+                    boolean success = ClientCM.getService().inserisciParametriClimatici(
+                            currentUser.getId(),
+                            selectedArea.getId(),
+                            java.sql.Date.valueOf(dataPicker.getValue()),
+                            ventoSpinner.getValue(),
+                            umiditaSpinner.getValue(),
+                            pressioneSpinner.getValue(),
+                            temperaturaSpinner.getValue(),
+                            precipitazioniSpinner.getValue(),
+                            altitudineSpinner.getValue(),
+                            massaGhiacciaiSpinner.getValue(),
+                            noteArea.getText()
+                    );
+
+                    if (success) {
+                        showAlert(Alert.AlertType.INFORMATION, "Successo",
+                                "Dati inseriti", "I parametri climatici sono stati inseriti con successo.");
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Errore",
+                                "Inserimento fallito", "Non è stato possibile inserire i parametri climatici.");
+                    }
+                } catch (RemoteException e) {
+                    showAlert(Alert.AlertType.ERROR, "Errore di connessione",
+                            "Errore del server", "Si è verificato un errore durante l'inserimento dei dati: " + e.getMessage());
+                }
+            }
+            return null;
+        });
+        dialog.showAndWait();
+    }
+
 
     @FXML
     private void handleViewByClimate() {
@@ -179,6 +364,7 @@ public class MainController {
 
     private void handleLogout(){
         mainApp.showLoginView();
+        setCurrentUser(null);
     }
 
     private void displayResult(List<CoordinateMonitoraggio> results, TextArea targetArea){
@@ -204,4 +390,5 @@ public class MainController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
 }

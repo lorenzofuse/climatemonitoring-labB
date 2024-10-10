@@ -72,7 +72,7 @@ public class ClientCM extends Application {
         }
     }
 
-    public void showMainView() {
+    public MainController showMainView() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MainView.fxml"));
             BorderPane mainView = loader.load();
@@ -81,12 +81,10 @@ public class ClientCM extends Application {
             MainController controller = loader.getController();
             controller.setMainApp(this);
 
-            //check sul css caricato
-            if (!primaryStage.getScene().getStylesheets().contains(getClass().getResource("/fxml/styles.css").toExternalForm())) {
-                primaryStage.getScene().getStylesheets().add(getClass().getResource("/fxml/styles.css").toExternalForm());
-            }
+            return controller;
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 

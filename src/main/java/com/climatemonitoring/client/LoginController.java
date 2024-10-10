@@ -43,15 +43,24 @@ public class LoginController {
         try {
             boolean authenticated = ClientCM.getService().autenticaOperatore(userId, password);
             if (authenticated) {
-                mainApp.showMainView();
+                OperatoriRegistrati user = ClientCM.getService().getUserById(userId);
+                if (user != null) {
+                    MainController mainController = mainApp.showMainView();
+                    mainController.setCurrentUser(user);
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Errore di Login",
+                            "Utente non trovato", "Impossibile recuperare i dati dell'utente.");
+                }
             } else {
-                showAlert(Alert.AlertType.ERROR,"Errore di Login", "Credenziali non valide", "Username o password non corretti.");
+                showAlert(Alert.AlertType.ERROR, "Errore di Login",
+                        "Credenziali non valide", "Username o password non corretti.");
             }
         } catch (RemoteException e) {
-            showAlert(Alert.AlertType.ERROR,"Errore di Connessione", "Errore del Server",
-                    "Si è verificato un errore durante il login: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore di Connessione",
+                    "Errore del Server", "Si è verificato un errore durante il login: " + e.getMessage());
         }
     }
+
     @FXML
     private void handleGuestLogin() {
         mainApp.showMainView();
