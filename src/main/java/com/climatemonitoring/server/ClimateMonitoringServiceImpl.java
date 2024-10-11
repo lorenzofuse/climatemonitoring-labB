@@ -295,27 +295,80 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
     }
 
     @Override
-    public boolean creaCentroMonitoraggio(String nome, String indirizzo, String cap, String comune, String provincia, int operatoreId) throws RemoteException {
-        String sql = "INSERT INTO centriMonitoraggio (nome, indirizzo, cap, comune, provincia, operatore_id) VALUES (?, ?, ?, ?, ?, ?)";
+    public boolean creaCentroMonitoraggio(int operatoreId, String nome, String indirizzo, String cap, String comune, String provincia) throws RemoteException {
+        try {
+            String query = "INSERT INTO centrimonitoraggio (operatore_id, nome, indirizzo, cap, comune, provincia) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
+
+            PreparedStatement stmt = dbManager.getConnection().prepareStatement(query);
+            stmt.setInt(1, operatoreId);
+            stmt.setString(2, nome);
+            stmt.setString(3, indirizzo);
+            stmt.setString(4, cap);
+            stmt.setString(5, comune);
+            stmt.setString(6, provincia);
+
+            int rowsAffected = stmt.executeUpdate();
+
+            // Verifica che il centro sia stato creato
+            if (rowsAffected > 0) {
+                System.out.println("Centro di monitoraggio creato con successo per operatore ID: " + operatoreId);
+                return true;
+            } else {
+                System.out.println("Nessun centro di monitoraggio creato");
+                return false;
+            }
+        } catch (SQLException e) {
+            System.err.println("Errore SQL durante la creazione del centro: " + e.getMessage());
+            throw new RemoteException("Errore durante la creazione del centro di monitoraggio", e);
+        }
+    }
+
+    @Override
+    public boolean creaAreaInteresse(int operatoreId, String citta, String stato, double latitudine, double longitudine) throws RemoteException {
+        int centroId = getCentroMonitoraggio(operatoreId);
+
+        if(centroId == -1){
+            throw new RemoteException("Centro di monitoraggio mancante");
+        }
 
         try {
-            Connection conn = dbManager.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            String query = "INSERT INTO areeinteresse (nome, stato, centro_monitoraggio_id, latitudine, longitudine) VALUES (?, ?, ?, ?, ?)";
 
-            pstmt.setString(1, nome);
-            pstmt.setString(2, indirizzo);
-            pstmt.setString(3, cap);
-            pstmt.setString(4, comune);
-            pstmt.setString(5, provincia);
-            pstmt.setInt(6, operatoreId);
+            PreparedStatement stmt = dbManager.getConnection().prepareStatement(query);
+            stmt.setString(1, citta);
+            stmt.setString(2, stato);
+            stmt.setInt(3, centroId);
+            stmt.setDouble(4, latitudine);
+            stmt.setDouble(5, longitudine);
 
-            int rowsAffected = pstmt.executeUpdate();
-
+            int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
-
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new RemoteException("Errore durante la creazione dell'area di interesse", e);
+        }
+
+    }
+
+    public int getCentroMonitoraggio(int operatoreId) throws RemoteException{
+        try{
+            String query = "SELECT id FROM centrimonitoraggio WHERE operatore_id = ?";
+            PreparedStatement stmt = dbManager.getConnection().prepareStatement(query);
+            stmt.setInt(1, operatoreId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()){
+                int centroId = rs.getInt("id");
+                System.out.println("Trovato centro di monitoraggio con ID " +centroId+" per operatore ID "+operatoreId );
+                return centroId;
+            }else{
+                System.out.println("Nessun centro di monitoraggio trovato per l'operatore con ID " +operatoreId);
+                return -1;
+            }
+        } catch (SQLException e) {
+            System.err.println("Errore SQL durante la ricerca del centro: " + e.getMessage());
+            throw new RemoteException("Errore durante la ricerca del centro di monitoraggio", e);
         }
     }
 
@@ -410,18 +463,19 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
 
             pstmt.setInt(1, centroMonitoraggioId);
 
-            ResultSet rs = pstmt.executeQuery();
 
-            // Itera sui risultati della query
-            while (rs.next()) {
-                CoordinateMonitoraggio area = new CoordinateMonitoraggio();
-                area.setId(rs.getInt("id"));
-                area.setNomeCitta( rs.getString("nome"));
-                area.setLatitudine(rs.getDouble("latitudine"));
-                area.setLongitudine(rs.getDouble("longitudine"));
-
-                // Aggiungi l'area alla lista
-                aree.add(area);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    CoordinateMonitoraggio area = new CoordinateMonitoraggio(
+                            rs.getInt("id"),
+                            rs.getString("nome"),
+                            rs.getString("stato"),
+                            null, // paese non presente nella tabella areeinteresse
+                            rs.getDouble("latitudine"),
+                            rs.getDouble("longitudine")
+                    );
+                    aree.add(area);
+                }
             }
 
         } catch (SQLException e) {

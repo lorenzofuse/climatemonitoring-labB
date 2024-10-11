@@ -47,6 +47,9 @@
                     <Button text="Crea Centro di Monitoraggio"
                             onAction="#handleCreateMonitoringCenter"
                             styleClass="primary-button"/>
+                    <Button text="Crea Area di Interesse"
+                            onAction="#handleCreateArea"
+                            styleClass="primary-button"/>
                     <Button text="Inserisci Dati Climatici"
                             onAction="#handlInsertClimateData"
                             styleClass="primary-button"/>

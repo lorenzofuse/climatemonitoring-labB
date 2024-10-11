@@ -25,6 +25,7 @@ public class MainController {
     @FXML private Button logoutButton;
     @FXML private TabPane mainTabPane;
     @FXML private Tab operatorTab;
+    @FXML private ComboBox<CoordinateMonitoraggio> areaComboBox;
 
     private OperatoriRegistrati currentUser;
     private ClientCM mainApp;
@@ -39,15 +40,18 @@ public class MainController {
         searchButton.setOnAction(event -> handleSearchNome());
         logoutButton.setOnAction(event -> handleLogout());
 
-        if(operatorTab!=null){
+        if (operatorTab != null) {
             operatorTab.setDisable(true);
         }
+
+        updateAreaComboBox();
     }
 
-    public void setCurrentUser(OperatoriRegistrati user){
+    public void setCurrentUser(OperatoriRegistrati user) {
         this.currentUser = user;
-        if(user != null && operatorTab != null){
+        if (user != null && operatorTab != null) {
             operatorTab.setDisable(false);
+            updateAreaComboBox();
         } else {
             operatorTab.setDisable(true);
         }
@@ -59,7 +63,7 @@ public class MainController {
         String stateName = stateField.getText().trim();
 
         if (cityName.isEmpty() || stateName.isEmpty()) {
-            showAlert(Alert.AlertType.ERROR,"Errore di Ricerca", "Campi vuoti", "Inserisci sia la città che lo stato.");
+            showAlert(Alert.AlertType.ERROR, "Errore di Ricerca", "Campi vuoti", "Inserisci sia la città che lo stato.");
             return;
         }
 
@@ -82,7 +86,7 @@ public class MainController {
                 resultArea.setText(sb.toString());
             }
         } catch (RemoteException e) {
-            showAlert(Alert.AlertType.ERROR,"Errore di Connessione", "Errore del Server",
+            showAlert(Alert.AlertType.ERROR, "Errore di Connessione", "Errore del Server",
                     "Si è verificato un errore durante la ricerca: " + e.getMessage());
         }
     }
@@ -177,10 +181,11 @@ public class MainController {
 
         return R * c;
     }
+
     @FXML
-    private void handleCreateMonitoringCenter(){
-        if(currentUser==null){
-            showAlert(Alert.AlertType.ERROR,"Errore","Accesso negato","Effettua il login come operatore");
+    private void handleCreateMonitoringCenter() {
+        if (currentUser == null) {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Accesso negato", "Effettua il login come operatore");
             return;
         }
 
@@ -194,7 +199,7 @@ public class MainController {
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new Insets(20,150,10,10));
+        grid.setPadding(new Insets(20, 150, 10, 10));
 
         TextField nomeField = new TextField();
         TextField indirizzoField = new TextField();
@@ -219,12 +224,12 @@ public class MainController {
             if (dialogButton == createButtonType) {
                 try {
                     boolean success = ClientCM.getService().creaCentroMonitoraggio(
+                            currentUser.getId(),
                             nomeField.getText(),
                             indirizzoField.getText(),
                             capField.getText(),
                             comuneField.getText(),
-                            provinciaField.getText(),
-                            currentUser.getId()
+                            provinciaField.getText()
                     );
 
                     if (success) {
@@ -246,9 +251,106 @@ public class MainController {
     }
 
     @FXML
-    private void handlInsertClimateData(){
-        if(currentUser == null){
-            showAlert(Alert.AlertType.ERROR,"Errore","Accesso negato","Effettua il login come operatore");
+    private void handleCreateArea() {
+        if (currentUser == null) {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Accesso Negato", "Effettua il login come operatore");
+            return;
+        }
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Crea Area di Interesse");
+        dialog.setHeaderText("Inserisci i dettagli dell'area di interesse");
+
+        ButtonType createButtonType = new ButtonType("Crea", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField cittaField = new TextField();
+        TextField statoField = new TextField();
+        TextField paeseField = new TextField();
+        TextField latitudineField = new TextField();
+        TextField longitudineField = new TextField();
+
+        grid.add(new Label("Città:"), 0, 0);
+        grid.add(cittaField, 1, 0);
+        grid.add(new Label("Stato:"), 0, 1);
+        grid.add(statoField, 1, 1);
+        grid.add(new Label("Paese:"), 0, 2);
+        grid.add(paeseField, 1, 2);
+        grid.add(new Label("Latitudine:"), 0, 3);
+        grid.add(latitudineField, 1, 3);
+        grid.add(new Label("Longitudine:"), 0, 4);
+        grid.add(longitudineField, 1, 4);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == createButtonType) {
+                try {
+                    String citta = cittaField.getText();
+                    String stato = statoField.getText();
+                    double latitudine = Double.parseDouble(latitudineField.getText());
+                    double longitudine = Double.parseDouble(longitudineField.getText());
+
+                    boolean success = ClientCM.getService().creaAreaInteresse(
+                            currentUser.getId(),
+                            citta,
+                            stato,
+                            latitudine,
+                            longitudine
+                    );
+
+                    if (success) {
+                        showAlert(Alert.AlertType.INFORMATION, "Successo",
+                                "Area creata", "L'area di interesse è stata creata con successo.");
+                        updateAreaComboBox();
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Errore",
+                                "Creazione fallita", "Non è stato possibile creare l'area di interesse.");
+                    }
+                } catch (NumberFormatException e) {
+                    showAlert(Alert.AlertType.ERROR, "Errore di input",
+                            "Formato non valido", "Inserisci coordinate valide.");
+                } catch (RemoteException e) {
+                    if (e.getMessage().contains("non ha un centro di monitoraggio")) {
+                        showAlert(Alert.AlertType.ERROR, "Errore",
+                                "Centro di Monitoraggio mancante",
+                                "Devi prima creare un centro di monitoraggio prima di poter creare un'area di interesse.");
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Errore di connessione",
+                                "Errore del server",
+                                "Si è verificato un errore durante la creazione dell'area: " + e.getMessage());
+                    }
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
+    }
+
+    private void updateAreaComboBox() {
+        if (areaComboBox != null && currentUser != null) {
+            try {
+                List<CoordinateMonitoraggio> aree = ClientCM.getService().getAreePerCentroMonitoraggio(currentUser.getId());
+
+                areaComboBox.getItems().clear();
+                areaComboBox.getItems().addAll(aree);
+            } catch (RemoteException e) {
+                showAlert(Alert.AlertType.ERROR, "Errore di aggiornamento",
+                        "Impossibile aggiornare le aree",
+                        "Si è verificato un errore durante l'aggiornamento delle aree: " + e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    private void handlInsertClimateData() {
+        if (currentUser == null) {
+            showAlert(Alert.AlertType.ERROR, "Errore", "Accesso negato", "Effettua il login come operatore");
             return;
         }
         Dialog<Void> dialog = new Dialog<>();
@@ -347,32 +449,17 @@ public class MainController {
         dialog.showAndWait();
     }
 
-
-    @FXML
-    private void handleViewByClimate() {
-        // Qui implementeremo la logica per visualizzare le aree per clima
-        // Per ora, mostriamo solo un messaggio
-        resultArea.setText("Funzionalità di visualizzazione per clima non ancora implementata.");
-    }
-
-    @FXML
-    private void handleOperatorMenu() {
-        // Qui implementeremo la logica per mostrare il menu dell'operatore
-        // Per ora, mostriamo solo un messaggio
-        resultArea.setText("Menu operatore non ancora implementato.");
-    }
-
-    private void handleLogout(){
+    private void handleLogout() {
         mainApp.showLoginView();
         setCurrentUser(null);
     }
 
-    private void displayResult(List<CoordinateMonitoraggio> results, TextArea targetArea){
-        if(results.isEmpty()){
+    private void displayResult(List<CoordinateMonitoraggio> results, TextArea targetArea) {
+        if (results.isEmpty()) {
             targetArea.setText("Nessun risultato trovato");
-        }else{
+        } else {
             StringBuilder sb = new StringBuilder();
-            for(CoordinateMonitoraggio area : results){
+            for (CoordinateMonitoraggio area : results) {
                 sb.append("Città: ").append(area.getNomeCitta())
                         .append("\nStato: ").append(area.getStato())
                         .append("\nPaese: ").append(area.getPaese())
@@ -383,6 +470,7 @@ public class MainController {
             targetArea.setText(sb.toString());
         }
     }
+
     private void showAlert(Alert.AlertType alertType, String title, String header, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
