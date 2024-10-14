@@ -377,6 +377,13 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
     public boolean inserisciParametriClimatici(int centroMonitoraggioId, int areaInteresseId, Date dataRilevazione,
                                                int vento, int umidita, int pressione, int temperatura,
                                                int precipitazioni, int altitudine, int massaGhiacciai, String note) throws RemoteException {
+
+        //check per verificare l'esistenza del centro
+        if (centroMonitoraggioId <= 0) {
+            System.out.println("ID del centro di monitoraggio non valido: " + centroMonitoraggioId);
+            return false;
+        }
+
         String sql = "INSERT INTO parametriclimatici (centro_monitoraggio_id, area_interesse_id, data_rilevazione, vento, umidita, pressione, temperatura, precipitazioni, altitudine, massa_ghiacciai, note) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -455,14 +462,12 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
     @Override
     public List<CoordinateMonitoraggio> getAreePerCentroMonitoraggio(int centroMonitoraggioId) throws RemoteException {
         List<CoordinateMonitoraggio> aree = new ArrayList<>();
-        String sql = "SELECT * FROM areeinteresse WHERE centro_monitoraggio_id = ?";
+        String query = "SELECT a.* FROM areeinteresse a " +
+                "JOIN centrimonitoraggio c ON a.centro_monitoraggio_id = c.id " +
+                "WHERE c.operatore_id = ?";
 
-        try {
-            Connection conn = dbManager.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-
+        try (PreparedStatement pstmt = dbManager.getConnection().prepareStatement(query)) {
             pstmt.setInt(1, centroMonitoraggioId);
-
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -477,12 +482,12 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
                     aree.add(area);
                 }
             }
-
         } catch (SQLException e) {
-            e.printStackTrace();
+             e.printStackTrace();
+             throw new RemoteException("Errore nel recupero delle aree di interesse", e);
         }
 
-        return aree;  // Ritorna la lista delle aree trovate
+        return aree;
     }
 
 }

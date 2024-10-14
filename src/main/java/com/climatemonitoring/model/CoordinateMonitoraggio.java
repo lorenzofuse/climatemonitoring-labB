@@ -75,16 +75,10 @@ public class CoordinateMonitoraggio implements Serializable {
         this.longitudine = longitudine;
     }
 
+
     @Override
     public String toString() {
-        return "CoordinateMonitoraggio{" +
-                "id=" + id +
-                ", nomeCitta='" + nomeCitta + '\'' +
-                ", stato='" + stato + '\'' +
-                ", paese='" + paese + '\'' +
-                ", latitudine=" + latitudine +
-                ", longitudine=" + longitudine +
-                '}';
+        return String.format("%s, %s (Lat: %.2f, Long: %.2f)", nomeCitta, stato, latitudine, longitudine);
     }
 
     public void add(CoordinateMonitoraggio area) { area.add(area);

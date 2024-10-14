@@ -10,7 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class MainController {
@@ -347,12 +349,31 @@ public class MainController {
         }
     }
 
+
+    private void logClimateDataInsertion(CoordinateMonitoraggio selectedArea, LocalDate date,
+                                         int vento, int umidita, int pressione, int temperatura,
+                                         int precipitazioni, int altitudine, int massaGhiacciai, String note) {
+        System.out.println("Tentativo di inserimento dati climatici:");
+        System.out.println("Area: " + selectedArea.getNomeCitta() + ", " + selectedArea.getStato());
+        System.out.println("Data: " + date);
+        System.out.println("Vento (km/h): " + vento);
+        System.out.println("Umidità (%): " + umidita);
+        System.out.println("Pressione (hPa): " + pressione);
+        System.out.println("Temperatura (°C): " + temperatura);
+        System.out.println("Precipitazioni (mm): " + precipitazioni);
+        System.out.println("Altitudine ghiacciai (m): " + altitudine);
+        System.out.println("Massa ghiacciai (kg): " + massaGhiacciai);
+        System.out.println("Note: " + note);
+    }
+
     @FXML
     private void handlInsertClimateData() {
         if (currentUser == null) {
             showAlert(Alert.AlertType.ERROR, "Errore", "Accesso negato", "Effettua il login come operatore");
             return;
         }
+
+
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Inserisci Dati Climatici");
         dialog.setHeaderText("Inserisci i parametri climatici per un'area");
@@ -367,16 +388,40 @@ public class MainController {
 
         ComboBox<CoordinateMonitoraggio> areaComboBox = new ComboBox<>();
         DatePicker dataPicker = new DatePicker();
-        Spinner<Integer> ventoSpinner = new Spinner<>(0, 100, 0);
-        Spinner<Integer> umiditaSpinner = new Spinner<>(0, 100, 0);
-        Spinner<Integer> pressioneSpinner = new Spinner<>(900, 1100, 1000);
+        Spinner<Integer> ventoSpinner = new Spinner<>(0, 300, 0);
+        Spinner<Integer> umiditaSpinner = new Spinner<>(0, 100, 50);
+        Spinner<Integer> pressioneSpinner = new Spinner<>(900, 1100, 1013);
         Spinner<Integer> temperaturaSpinner = new Spinner<>(-50, 50, 20);
         Spinner<Integer> precipitazioniSpinner = new Spinner<>(0, 500, 0);
-        Spinner<Integer> altitudineSpinner = new Spinner<>(-500, 8000, 0);
-        Spinner<Integer> massaGhiacciaiSpinner = new Spinner<>(0, 10000, 0);
+        Spinner<Integer> altitudineSpinner = new Spinner<>(0, 8000, 0);
+        Spinner<Integer> massaGhiacciaiSpinner = new Spinner<>(0, 1000000, 0);
         TextArea noteArea = new TextArea();
         noteArea.setPrefRowCount(3);
 
+        grid.add(new Label("Area:"), 0, 0);
+        grid.add(areaComboBox, 1, 0);
+        grid.add(new Label("Data:"), 0, 1);
+        grid.add(dataPicker, 1, 1);
+        grid.add(new Label("Vento (km/h):"), 0, 2);
+        grid.add(ventoSpinner, 1, 2);
+        grid.add(new Label("Umidità (%):"), 0, 3);
+        grid.add(umiditaSpinner, 1, 3);
+        grid.add(new Label("Pressione (hPa):"), 0, 4);
+        grid.add(pressioneSpinner, 1, 4);
+        grid.add(new Label("Temperatura (°C):"), 0, 5);
+        grid.add(temperaturaSpinner, 1, 5);
+        grid.add(new Label("Precipitazioni (mm):"), 0, 6);
+        grid.add(precipitazioniSpinner, 1, 6);
+        grid.add(new Label("Altitudine ghiacciai (m):"), 0, 7);
+        grid.add(altitudineSpinner, 1, 7);
+        grid.add(new Label("Massa ghiacciai (kg):"), 0, 8);
+        grid.add(massaGhiacciaiSpinner, 1, 8);
+        grid.add(new Label("Note:"), 0, 9);
+        grid.add(noteArea, 1, 9);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Popola il ComboBox con le aree disponibili
         try {
             List<CoordinateMonitoraggio> aree = ClientCM.getService().getAreePerCentroMonitoraggio(currentUser.getId());
             areaComboBox.getItems().addAll(aree);
@@ -385,37 +430,39 @@ public class MainController {
                     "Impossibile caricare le aree", "Si è verificato un errore nel caricamento delle aree: " + e.getMessage());
         }
 
-        grid.add(new Label("Area:"), 0, 0);
-        grid.add(areaComboBox, 1, 0);
-        grid.add(new Label("Data:"), 0, 1);
-        grid.add(dataPicker, 1, 1);
-        grid.add(new Label("Vento:"), 0, 2);
-        grid.add(ventoSpinner, 1, 2);
-        grid.add(new Label("Umidità:"), 0, 2);
-        grid.add(umiditaSpinner, 1, 2);
-        grid.add(new Label("Pressione:"), 0, 2);
-        grid.add(pressioneSpinner, 1, 2);
-        grid.add(new Label("Temperatura:"), 0, 2);
-        grid.add(temperaturaSpinner, 1, 2);
-        grid.add(new Label("Precipitazioni:"), 0, 2);
-        grid.add(precipitazioniSpinner, 1, 2);
-        grid.add(new Label("Altitudine:"), 0, 2);
-        grid.add(altitudineSpinner, 1, 2);
-        grid.add(new Label("Massa Ghiacciai:"), 0, 2);
-        grid.add(massaGhiacciaiSpinner, 1, 2);
-        grid.add(new Label("Note :"), 0, 2);
-        grid.add(noteArea, 1, 2);
-
-        dialog.getDialogPane().setContent(grid);
-
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == insertButtonType) {
                 CoordinateMonitoraggio selectedArea = areaComboBox.getValue();
-                if (selectedArea == null || dataPicker.getValue() == null) {
+                LocalDate selectedDate = dataPicker.getValue();
+                if (selectedArea == null || dataPicker.getValue() == null || selectedDate==null) {
                     showAlert(Alert.AlertType.ERROR, "Dati mancanti",
                             "Campi obbligatori", "Seleziona un'area e una data.");
                     return null;
                 }
+
+                //loggin dei dati
+                logClimateDataInsertion(
+                        selectedArea,
+                        selectedDate,
+                        ventoSpinner.getValue(),
+                        umiditaSpinner.getValue(),
+                        pressioneSpinner.getValue(),
+                        temperaturaSpinner.getValue(),
+                        precipitazioniSpinner.getValue(),
+                        altitudineSpinner.getValue(),
+                        massaGhiacciaiSpinner.getValue(),
+                        noteArea.getText()
+                );
+
+                if (!validateClimateData(ventoSpinner.getValue(), umiditaSpinner.getValue(),
+                        pressioneSpinner.getValue(), temperaturaSpinner.getValue(),
+                        precipitazioniSpinner.getValue(), altitudineSpinner.getValue(),
+                        massaGhiacciaiSpinner.getValue())) {
+                    showAlert(Alert.AlertType.ERROR, "Dati non validi",
+                            "I dati inseriti non sono validi", "Controlla i valori e assicurati che siano nel range corretto.");
+                    return null;
+                }
+
 
                 try {
                     boolean success = ClientCM.getService().inserisciParametriClimatici(
@@ -442,11 +489,28 @@ public class MainController {
                 } catch (RemoteException e) {
                     showAlert(Alert.AlertType.ERROR, "Errore di connessione",
                             "Errore del server", "Si è verificato un errore durante l'inserimento dei dati: " + e.getMessage());
+                } catch (Exception e) {
+                    showAlert(Alert.AlertType.ERROR, "Errore imprevisto",
+                            "Si è verificato un errore inaspettato", "Dettagli: " + e.getMessage());
+                    e.printStackTrace(); // Log dell'eccezione per il debugging
                 }
             }
             return null;
         });
+
         dialog.showAndWait();
+    }
+
+    private boolean validateClimateData(int vento, int umidita, int pressione, int temperatura,
+                                        int precipitazioni, int altitudine, int massaGhiacciai) {
+        if (vento < 0 || vento > 300) return false;
+        if (umidita < 0 || umidita > 100) return false;
+        if (pressione < 900 || pressione > 1100) return false;
+        if (temperatura < -50 || temperatura > 50) return false;
+        if (precipitazioni < 0 || precipitazioni > 500) return false;
+        if (altitudine < 0 || altitudine > 8000) return false;
+        if (massaGhiacciai < 0 || massaGhiacciai > 1000000) return false;
+        return true;
     }
 
     private void handleLogout() {

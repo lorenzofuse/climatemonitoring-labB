@@ -74,3 +74,29 @@
 .tab:selected .tab-label {
     -fx-text-fill: white;
 }
+
+.climate-data-grid {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+.climate-data-grid .label {
+    -fx-font-weight: bold;
+}
+
+.climate-data-grid .spinner {
+    -fx-pref-width: 150px;
+}
+
+.climate-data-grid .text-area {
+    -fx-pref-width: 300px;
+}
+
+.climate-data-grid .button {
+    -fx-background-color: #2e7d32;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-pref-width: 150px;
+}
