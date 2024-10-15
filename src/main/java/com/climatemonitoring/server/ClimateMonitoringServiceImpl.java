@@ -296,10 +296,23 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
 
     @Override
     public boolean creaCentroMonitoraggio(int operatoreId, String nome, String indirizzo, String cap, String comune, String provincia) throws RemoteException {
+        // Verifica se l'operatore ha già un centro di monitoraggio
         try {
+            // Query per verificare se l'operatore ha già un centro
+            String verificaQuery = "SELECT id FROM centrimonitoraggio WHERE operatore_id = ?";
+            PreparedStatement verificaStmt = dbManager.getConnection().prepareStatement(verificaQuery);
+            verificaStmt.setInt(1, operatoreId);
+            ResultSet rs = verificaStmt.executeQuery();
+
+            if (rs.next()) {
+                // Se l'operatore ha già un centro, restituisci un errore
+                System.out.println("L'operatore con ID " + operatoreId + " ha già un centro di monitoraggio.");
+                return false;
+            }
+
+            // Se l'operatore non ha un centro, procedi con la creazione
             String query = "INSERT INTO centrimonitoraggio (operatore_id, nome, indirizzo, cap, comune, provincia) " +
                     "VALUES (?, ?, ?, ?, ?, ?)";
-
             PreparedStatement stmt = dbManager.getConnection().prepareStatement(query);
             stmt.setInt(1, operatoreId);
             stmt.setString(2, nome);
@@ -310,7 +323,6 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
 
             int rowsAffected = stmt.executeUpdate();
 
-            // Verifica che il centro sia stato creato
             if (rowsAffected > 0) {
                 System.out.println("Centro di monitoraggio creato con successo per operatore ID: " + operatoreId);
                 return true;
@@ -318,15 +330,18 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
                 System.out.println("Nessun centro di monitoraggio creato");
                 return false;
             }
+
         } catch (SQLException e) {
             System.err.println("Errore SQL durante la creazione del centro: " + e.getMessage());
             throw new RemoteException("Errore durante la creazione del centro di monitoraggio", e);
         }
     }
 
+
     @Override
     public boolean creaAreaInteresse(int operatoreId, String citta, String stato, double latitudine, double longitudine) throws RemoteException {
         int centroId = getCentroMonitoraggio(operatoreId);
+
 
         if(centroId == -1){
             throw new RemoteException("Centro di monitoraggio mancante");

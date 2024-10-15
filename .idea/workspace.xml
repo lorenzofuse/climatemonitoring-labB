@@ -6,10 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="Implementato btn per la creazione dell'area di interesse che si associa in automatico al centro dell'operatore che lo crea&#10;Da risolvere problematica inserisciParametriClimatici e il suo handle&#10;problemi in visualizzazione vedere foto">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CoordinateMonitoraggio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CoordinateMonitoraggio.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/styles.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,6 +58,9 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.climatemonitoring.model" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Lorenzo\OneDrive\Desktop\climatemonitoring-labB\src\main\resources\images" />
     </key>
