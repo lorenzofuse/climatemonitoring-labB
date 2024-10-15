@@ -467,7 +467,8 @@ public class MainController {
                 try {
                     boolean success = ClientCM.getService().inserisciParametriClimatici(
                             currentUser.getId(),
-                            selectedArea.getId(),
+                            null,  // areaInteresseId non è più usato, passa null
+                            selectedArea.getId(),  // Usa l'ID delle coordinate di monitoraggio
                             java.sql.Date.valueOf(dataPicker.getValue()),
                             ventoSpinner.getValue(),
                             umiditaSpinner.getValue(),
@@ -478,6 +479,7 @@ public class MainController {
                             massaGhiacciaiSpinner.getValue(),
                             noteArea.getText()
                     );
+
 
                     if (success) {
                         showAlert(Alert.AlertType.INFORMATION, "Successo",

@@ -4,15 +4,12 @@ package com.climatemonitoring.util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 public class DatabaseManager {
     //fisso 5433 msi 5432
-    private static final String DB_URL = "jdbc:postgresql://localhost:5432/ClimateMonitoring";
+    private static final String DB_URL = "jdbc:postgresql://localhost:5433/ClimateMonitoring";
     private static final String DB_USER = "postgres";
     private static final String DB_PSW = "postgre";
-
     private static DatabaseManager instance;
     private Connection connection;
 
@@ -24,7 +21,6 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
-
     public static void main(String[] args) {
         DatabaseManager dbManager = DatabaseManager.getInstance();
         try {
@@ -40,7 +36,6 @@ public class DatabaseManager {
             dbManager.closeConnection();
         }
     }
-
 
     public static synchronized DatabaseManager getInstance() {
         if (instance == null) {
@@ -63,61 +58,6 @@ public class DatabaseManager {
             }
         } catch (SQLException e) {
             System.err.println("Error closing connection: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public void beginTransaction() throws SQLException {
-        getConnection().setAutoCommit(false);
-    }
-
-    public void commitTransaction() throws SQLException {
-        try {
-            getConnection().commit();
-        } finally {
-            getConnection().setAutoCommit(true);
-        }
-    }
-
-    public void rollbackTransaction() {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.rollback();
-                connection.setAutoCommit(true);
-            }
-        } catch (SQLException e) {
-            System.err.println("Error during rollback: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public ResultSet executeQuery(String query, Object... params) throws SQLException {
-        PreparedStatement pstmt = getConnection().prepareStatement(query);
-        for (int i = 0; i < params.length; i++) {
-            pstmt.setObject(i + 1, params[i]);
-        }
-        return pstmt.executeQuery();
-    }
-
-    public int executeUpdate(String query, Object... params) throws SQLException {
-        PreparedStatement pstmt = getConnection().prepareStatement(query);
-        for (int i = 0; i < params.length; i++) {
-            pstmt.setObject(i + 1, params[i]);
-        }
-        return pstmt.executeUpdate();
-    }
-
-    // Nuovo metodo per chiudere PreparedStatement e ResultSet in modo sicuro
-    public void closeResources(PreparedStatement pstmt, ResultSet rs) {
-        try {
-            if (rs != null && !rs.isClosed()) {
-                rs.close();
-            }
-            if (pstmt != null && !pstmt.isClosed()) {
-                pstmt.close();
-            }
-        } catch (SQLException e) {
-            System.err.println("Error closing resources: " + e.getMessage());
             e.printStackTrace();
         }
     }

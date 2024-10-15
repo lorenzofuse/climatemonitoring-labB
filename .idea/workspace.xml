@@ -6,7 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="Implementato btn per la creazione dell'area di interesse che si associa in automatico al centro dell'operatore che lo crea&#10;Da risolvere problematica inserisciParametriClimatici e il suo handle&#10;problemi in visualizzazione vedere foto">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/MainController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/shared/ClimateMonitoringService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/shared/ClimateMonitoringService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/util/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/util/DatabaseManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +31,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
     <option name="showPreview" value="true" />
   </component>
   <component name="ProjectColorInfo">{
@@ -84,6 +87,14 @@
       <item itemvalue="Application.ClientCM" />
       <item itemvalue="Application.ServecCM" />
     </list>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-17.0.10-corretto-17.0.10-4caba194b151-5cd809f4" />
+        <option value="jdk-17.0.9-corretto-17.0.9-f644763e9732-ebaef533" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
