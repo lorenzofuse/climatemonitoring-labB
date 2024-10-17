@@ -3,30 +3,31 @@ package com.climatemonitoring.client;
 
 import com.climatemonitoring.model.CoordinateMonitoraggio;
 import com.climatemonitoring.model.OperatoriRegistrati;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import java.rmi.Remote;
+
 import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.util.List;
 
 public class MainController {
 
-    @FXML public TextField latitudeField;
     @FXML private TextField searchField;
     @FXML private TextField stateField;
+    @FXML public TextField latitudeField;
     @FXML private TextField longitudeField;
     @FXML private Button searchButton;
     @FXML private TextArea resultArea;
     @FXML private TextArea coordinateResultArea;
     @FXML private Button logoutButton;
-    @FXML private TabPane mainTabPane;
     @FXML private Tab operatorTab;
+    @FXML private TextField paeseField;
+    @FXML private TextArea paeseResultArea;
+
+    @FXML private TabPane mainTabPane;
     @FXML private ComboBox<CoordinateMonitoraggio> areaComboBox;
 
     private OperatoriRegistrati currentUser;
@@ -70,8 +71,7 @@ public class MainController {
         }
 
         try {
-            List<CoordinateMonitoraggio> results =
-                    ClientCM.getService().cercaAreaGeograficaNome(cityName, stateName);
+            List<CoordinateMonitoraggio> results = ClientCM.getService().cercaAreaGeograficaNome(cityName, stateName);
 
             if (results.isEmpty()) {
                 resultArea.setText("Nessun risultato trovato.");
@@ -182,6 +182,37 @@ public class MainController {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         return R * c;
+    }
+
+    @FXML
+    private void handleSearchByCountry() {
+        String paese = paeseField.getText().trim();
+
+        if(paese.isEmpty()){
+            showAlert(Alert.AlertType.ERROR,"Errore di ricerca","Campo vuoto","Inserisci il nome del paese");
+            return;
+        }
+
+        try{
+            List<CoordinateMonitoraggio> ris = ClientCM.getService().cercaAreaGeograficaPerPaese(paese);
+            if (ris.isEmpty()) {
+                paeseResultArea.setText("Nessun risultato trovato.");
+            } else {
+                StringBuilder sb = new StringBuilder();
+                for (CoordinateMonitoraggio area : ris) {
+                    sb.append("Città: ").append(area.getNomeCitta())
+                            .append("\nStato: ").append(area.getStato())
+                            .append("\nPaese: ").append(area.getPaese())
+                            .append("\nLatitudine: ").append(area.getLatitudine())
+                            .append("\nLongitudine: ").append(area.getLongitudine())
+                            .append("\n\n");
+                }
+                paeseResultArea.setText(sb.toString());
+            }
+        } catch (RemoteException e) {
+            showAlert(Alert.AlertType.ERROR, "Errore di Connessione", "Errore del Server",
+                    "Si è verificato un errore durante la ricerca: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -330,7 +361,6 @@ public class MainController {
             }
             return null;
         });
-
         dialog.showAndWait();
     }
 

@@ -20,7 +20,7 @@
 
     <center>
         <TabPane>
-            <Tab text="Cerca per Nome" closable="false">
+            <Tab text="Cerca per Denominazione" closable="false">
                 <VBox spacing="15" styleClass="content-pane">
                     <HBox spacing="10" alignment="CENTER">
                         <TextField fx:id="searchField" promptText="Nome città" HBox.hgrow="ALWAYS"/>
@@ -28,6 +28,16 @@
                         <Button fx:id="searchButton" text="Cerca" styleClass="primary-button"/>
                     </HBox>
                     <TextArea fx:id="resultArea" VBox.vgrow="ALWAYS" editable="false" wrapText="true"/>
+                </VBox>
+            </Tab>
+
+            <Tab text="Cerca per Paese" closable="false">
+                <VBox spacing="15" styleClass="content-pane">
+                    <HBox spacing="10" alignment="CENTER">
+                        <TextField fx:id="paeseField" promptText="Nome paese" HBox.hgrow="ALWAYS"/>
+                        <Button onAction="#handleSearchByCountry" text="Cerca" styleClass="primary-button"/>
+                    </HBox>
+                    <TextArea fx:id="paeseResultArea" VBox.vgrow="ALWAYS" editable="false" wrapText="true"/>
                 </VBox>
             </Tab>
 

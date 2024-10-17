@@ -57,6 +57,46 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
         return aree;
     }
 
+    @Override
+    public List<CoordinateMonitoraggio> cercaAreaGeograficaPerPaese(String paese) throws RemoteException{
+        List<CoordinateMonitoraggio> aree = new ArrayList<>();
+
+        if(paese ==null || paese.trim().isEmpty()){
+            throw new IllegalArgumentException("Il paese non può essere nullo");
+        }
+
+        String sql = "SELECT * FROM coordinatemonitoraggio WHERE paese LIKE ?";
+
+        try{
+            Connection conn = dbManager.getConnection();
+            PreparedStatement p = conn.prepareStatement(sql);
+
+            p.setString(1, "%" + paese + "%");
+
+            try{
+                ResultSet rs = p.executeQuery();
+                while(rs.next()){
+                    CoordinateMonitoraggio area = new CoordinateMonitoraggio(
+                            rs.getInt("id"),
+                            rs.getString("nome_citta"),
+                            rs.getString("stato"),
+                            rs.getString("paese"),
+                            rs.getDouble("latitudine"),
+                            rs.getDouble("longitudine")
+                    );
+                    aree.add(area);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+        } catch (SQLException e) {
+            throw new RemoteException("Errore durante la ricerca delle aree geografiche per paese", e);
+
+        }
+    return aree;
+    }
+
 
     @Override
     public List<CoordinateMonitoraggio> cercaAreaGeograficaCoordinate(Double latitudine, Double longitudine) throws RemoteException {
@@ -443,6 +483,16 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
     public boolean inserisciParametriClimatici(int centroMonitoraggioId, Integer areaInteresseId, Integer coordinateMonitoraggioId, Date dataRilevazione,
                                                int vento, int umidita, int pressione, int temperatura,
                                                int precipitazioni, int altitudine, int massaGhiacciai, String note) throws RemoteException {
+
+        if(dataRilevazione == null || dataRilevazione.after(new Date())){
+            throw new IllegalArgumentException("La data di rilevazione non può essere null oppure nel futuro");
+        }
+
+        if (vento < 0 || umidita < 0 || umidita > 100 || pressione < 0 || temperatura < -273 ||
+                precipitazioni < 0 || altitudine < -420 || massaGhiacciai < 0) {
+            throw new IllegalArgumentException("Parametri inseriti non validi");
+        }
+
         String sql = "INSERT INTO parametriclimatici (centro_monitoraggio_id, area_interesse_id, coordinate_monitoraggio_id, data_rilevazione, vento, umidita, pressione, temperatura, precipitazioni, altitudine, massa_ghiacciai, note) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 

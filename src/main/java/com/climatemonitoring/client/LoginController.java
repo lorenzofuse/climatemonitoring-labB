@@ -9,7 +9,7 @@ import java.rmi.RemoteException;
 
 public class LoginController {
 
-    public Button registerButton;
+    @FXML public Button registerButton;
     @FXML private TextField userIdField;
     @FXML private PasswordField passwordField;
     @FXML private Button loginButton;
@@ -17,7 +17,6 @@ public class LoginController {
 
     private ClientCM mainApp;
 
-    // Collegamento a ClientCM per cambiare le viste
     public void setMainApp(ClientCM mainApp) {
         this.mainApp = mainApp;
     }
@@ -26,7 +25,6 @@ public class LoginController {
         loginButton.setOnAction(event->handleLogin());
         guestButton.setOnAction(event->handleGuestLogin());
         registerButton.setOnAction(event -> showRegistrationDialog());
-
     }
 
     @FXML

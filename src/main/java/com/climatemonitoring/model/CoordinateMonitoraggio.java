@@ -12,10 +12,8 @@ public class CoordinateMonitoraggio implements Serializable {
     private double latitudine;
     private double longitudine;
 
-    // Costruttore vuoto necessario per la serializzazione
     public CoordinateMonitoraggio() {}
 
-    // Costruttore con tutti i campi
     public CoordinateMonitoraggio(int id, String nomeCitta, String stato, String paese,
                                   double latitudine, double longitudine) {
         this.id = id;
@@ -26,7 +24,6 @@ public class CoordinateMonitoraggio implements Serializable {
         this.longitudine = longitudine;
     }
 
-    // Getter e setter standard
     public int getId() {
         return id;
     }
@@ -75,12 +72,9 @@ public class CoordinateMonitoraggio implements Serializable {
         this.longitudine = longitudine;
     }
 
-
     @Override
     public String toString() {
         return String.format("%s, %s (Lat: %.2f, Long: %.2f)", nomeCitta, stato, latitudine, longitudine);
     }
 
-    public void add(CoordinateMonitoraggio area) { area.add(area);
-    }
 }

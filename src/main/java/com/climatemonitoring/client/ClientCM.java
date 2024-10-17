@@ -13,6 +13,7 @@ import com.climatemonitoring.shared.ClimateMonitoringService;
 import java.io.IOException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.function.BiPredicate;
 
 public class ClientCM extends Application {
 
@@ -29,15 +30,7 @@ public class ClientCM extends Application {
             initRootLayout();
             showLoginView();
         } else {
-            // Se la connessione RMI fallisce, mostra un errore e chiudi l'applicazione
-            Platform.runLater(() -> {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Errore di Connessione");
-                alert.setHeaderText("Impossibile connettersi al server");
-                alert.setContentText("Assicurati che il server sia in esecuzione e riprova.");
-                alert.showAndWait();
-                Platform.exit();
-            });
+
         }
     }
 
@@ -59,17 +52,12 @@ public class ClientCM extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/RootLayout.fxml"));
             rootLayout = loader.load();
             Scene scene = new Scene(rootLayout);
-
-            //css
-            String csspath = getClass().getResource("/fxml/styles.css").toExternalForm();
-            scene.getStylesheets().add(csspath);
-
-
+            scene.getStylesheets().add(getClass().getResource("/fxml/styles.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+              }
     }
 
     public MainController showMainView() {
@@ -87,6 +75,7 @@ public class ClientCM extends Application {
             return null;
         }
     }
+
 
     public void showLoginView() {
         try {

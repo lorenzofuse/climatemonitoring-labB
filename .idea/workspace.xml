@@ -4,12 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="Implementato btn per la creazione dell'area di interesse che si associa in automatico al centro dell'operatore che lo crea&#10;Da risolvere problematica inserisciParametriClimatici e il suo handle&#10;problemi in visualizzazione vedere foto">
+    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="Revisione">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/ClientCM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/ClientCM.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/LoginController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/client/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CoordinateMonitoraggio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CoordinateMonitoraggio.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/shared/ClimateMonitoringService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/shared/ClimateMonitoringService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/util/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/util/DatabaseManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainView.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/RootLayout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/RootLayout.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/styles.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +37,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
+    <option name="selectedTabId" value="CurrentFile" />
     <option name="showPreview" value="true" />
   </component>
   <component name="ProjectColorInfo">{
@@ -55,7 +61,7 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Lorenzo/OneDrive/Desktop/climatemonitoring-labB/src/main/resources/images&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Lorenzo/OneDrive/Desktop/climatemonitoring-labB&quot;,
     &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/Lorenzo/OneDrive/Desktop/cm/src/main/java/com/climatemonitoring/Main.java&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;
   }
@@ -177,7 +183,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728655475039</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Revisione">
+      <option name="closed" value="true" />
+      <created>1729026496824</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1729026496824</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -201,7 +215,8 @@
     <MESSAGE value="Miglioramenti a livello UI generale in tutti i controller&#10;Rimozione requires inutili presenti all'interno del moduleinfo che causavano problemi con l'avvio&#10;Aggiunto metodo per rilevazione della distanza più vicina con le coordinate inserite&#10;Sistemare, se si inserisco delle coordinate a caso, o esce che non ci sono&#10;o da i risultati, per esempio se si inserisce 45 45 da WriteAbortedException" />
     <MESSAGE value="Risoluzione problemi client UI&#10;Aggiunta primi metodi dell'operatore&#10;creazione centri monitoraggio&#10;creazione area non implementato (capire collegamento)&#10;creazione inserimento par climatici &#10;-combobox in cui ci sono le aree create e già presenti nel db (da agg)&#10;-data e par clim" />
     <MESSAGE value="Implementato btn per la creazione dell'area di interesse che si associa in automatico al centro dell'operatore che lo crea&#10;Da risolvere problematica inserisciParametriClimatici e il suo handle&#10;problemi in visualizzazione vedere foto" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implementato btn per la creazione dell'area di interesse che si associa in automatico al centro dell'operatore che lo crea&#10;Da risolvere problematica inserisciParametriClimatici e il suo handle&#10;problemi in visualizzazione vedere foto" />
+    <MESSAGE value="Revisione" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revisione" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -212,5 +227,8 @@
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/climatemonitoring_labB$ClientCM.ic" NAME="ClientCM Coverage Results" MODIFIED="1729097580152" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
