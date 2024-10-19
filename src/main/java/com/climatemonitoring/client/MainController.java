@@ -3,6 +3,7 @@ package com.climatemonitoring.client;
 
 import com.climatemonitoring.model.CoordinateMonitoraggio;
 import com.climatemonitoring.model.OperatoriRegistrati;
+import javafx.application.Preloader;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -15,6 +16,7 @@ import java.util.List;
 
 public class MainController {
 
+
     @FXML private TextField searchField;
     @FXML private TextField stateField;
     @FXML public TextField latitudeField;
@@ -26,9 +28,13 @@ public class MainController {
     @FXML private Tab operatorTab;
     @FXML private TextField paeseField;
     @FXML private TextArea paeseResultArea;
-
+    @FXML public TextArea operatorResultArea;
     @FXML private TabPane mainTabPane;
     @FXML private ComboBox<CoordinateMonitoraggio> areaComboBox;
+    @FXML private TextField areaNameField;
+    @FXML private TextField areaStateField;
+    @FXML private Button viewClimateDataButton;
+    @FXML private TextArea climateDataResultArea;
 
     private OperatoriRegistrati currentUser;
     private ClientCM mainApp;
@@ -37,7 +43,7 @@ public class MainController {
         this.mainApp = mainApp;
     }
 
-    // Metodo di inizializzazione chiamato automaticamente dopo il caricamento del file FXML
+    //chiamato automaticamente dopo il caricamento del file FXML
     @FXML
     private void initialize() {
         searchButton.setOnAction(event -> handleSearchNome());
@@ -212,6 +218,28 @@ public class MainController {
         } catch (RemoteException e) {
             showAlert(Alert.AlertType.ERROR, "Errore di Connessione", "Errore del Server",
                     "Si è verificato un errore durante la ricerca: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleViewClimateData() {
+        String nome = areaNameField.getText().trim();
+        String stato = areaStateField.getText().trim();
+
+        if (nome.isEmpty() || stato.isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Errore di ricerca", "Campi vuoti", "Inserisci sia il nome dell'area che lo stato");
+            return;
+        }
+        try {
+            String ris = ClientCM.getService().visualizzaAreaGeografica(nome, stato);
+
+            if (ris.isEmpty()) {
+                climateDataResultArea.setText("Nessuna informazione disponibile per quest'area");
+            } else {
+                climateDataResultArea.setText(ris);
+            }
+        } catch (RemoteException e) {
+            showAlert(Alert.AlertType.ERROR, "Errore di connessione", "Errore del server", "Si è verificato un errore durante la ricerca: " + e.getMessage());
         }
     }
 
@@ -497,8 +525,8 @@ public class MainController {
                 try {
                     boolean success = ClientCM.getService().inserisciParametriClimatici(
                             currentUser.getId(),
-                            null,  // areaInteresseId non è più usato, passa null
-                            selectedArea.getId(),  // Usa l'ID delle coordinate di monitoraggio
+                            null,
+                            selectedArea.getId(),
                             java.sql.Date.valueOf(dataPicker.getValue()),
                             ventoSpinner.getValue(),
                             umiditaSpinner.getValue(),
@@ -544,7 +572,6 @@ public class MainController {
         if (massaGhiacciai < 0 || massaGhiacciai > 1000000) return false;
         return true;
     }
-
     private void handleLogout() {
         mainApp.showLoginView();
         setCurrentUser(null);

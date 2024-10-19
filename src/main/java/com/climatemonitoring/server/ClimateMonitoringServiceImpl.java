@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -110,10 +111,10 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
 
         String sql = "SELECT * FROM coordinatemonitoraggio WHERE latitudine BETWEEN ? - ? AND ? + ? AND longitudine BETWEEN ? - ? AND ? + ? ";
 
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            Connection conn = dbManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            // Settiamo i parametri per il range di ricerca
             pstmt.setDouble(1, latitudine);
             pstmt.setDouble(2, TOLLERANZA);
             pstmt.setDouble(3, latitudine);
@@ -123,7 +124,8 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
             pstmt.setDouble(7, longitudine);
             pstmt.setDouble(8, TOLLERANZA);
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+            try{
+                ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     CoordinateMonitoraggio area = new CoordinateMonitoraggio();
                     area.setId(rs.getInt("id"));
@@ -134,13 +136,15 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
                     area.setLongitudine(rs.getDouble("longitudine"));
                     aree.add(area);
                 }
+            }catch(Exception e1){
+                e1.printStackTrace();
             }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RemoteException("Errore durante la ricerca nel database", e);
         }
 
-        // Ordiniamo i risultati per distanza dopo averli recuperati
+        //ordino ris dopo averli presi tramite la dist + vicina
         if (!aree.isEmpty()) {
             aree.sort((a1, a2) -> {
                 double dist1 = calcolaDistanzaKm(latitudine, longitudine, a1.getLatitudine(), a1.getLongitudine());
@@ -148,17 +152,13 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
                 return Double.compare(dist1, dist2);
             });
 
-            // Limitiamo i risultati ai 5 più vicini
-            if (aree.size() > 5) {
-                aree = aree.subList(0, 5);
-            }
         }
 
         return aree;
     }
 
     private double calcolaDistanzaKm(double lat1, double lon1, double lat2, double lon2) {
-        final int R = 6371; // Raggio della Terra in km
+        final int R = 6371;
 
         double latDistance = Math.toRadians(lat2 - lat1);
         double lonDistance = Math.toRadians(lon2 - lon1);
@@ -174,7 +174,6 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
 
     @Override
     public String visualizzaAreaGeografica(String nome, String stato) throws RemoteException {
-
         if (nome == null || nome.trim().isEmpty() || stato == null || stato.trim().isEmpty()) {
             throw new IllegalArgumentException("Nome e stato non possono essere nulli o vuoti");
         }
@@ -183,14 +182,15 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
 
         StringBuilder result = new StringBuilder();
 
-        try{
+        try {
             Connection conn = dbManager.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, nome);
-            pstmt.setString(2,stato);
-            
-            try (ResultSet rs = pstmt.executeQuery()) {
+            pstmt.setString(2, stato);
+
+            try {
+                ResultSet rs = pstmt.executeQuery();
                 if (rs.next()) {
                     result.append("Informazioni area geografica:\n");
                     result.append("ID: ").append(rs.getInt("id")).append("\n");
@@ -200,17 +200,19 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
                     result.append("Latitudine: ").append(rs.getDouble("latitudine")).append("\n");
                     result.append("Longitudine: ").append(rs.getDouble("longitudine")).append("\n");
 
-                    int numRilevazioni = rs.getInt("num_rilevazioni");
-                    result.append("\nDati climatici:\n");
-                    if (numRilevazioni > 0) {
-                        result.append("Numero di rilevazioni: ").append(numRilevazioni).append("\n");
-                        appendParametriClimatici(result, rs.getInt("id"));
+                    int areaId = rs.getInt("id");
+                    boolean hasParametri = appendParametriClimatici(result, areaId);
+
+                    if (hasParametri) {
+                        appendCommentiOperatori(result, areaId);
                     } else {
-                        result.append("Nessun dato climatico disponibile per questa area.\n");
+                        result.append("\nNessun dato climatico disponibile per questa area.\n");
                     }
                 } else {
                     result.append("Area non trovata.");
                 }
+            }catch (Exception e1){
+                e1.printStackTrace();
             }
         } catch (SQLException e) {
             throw new RemoteException("Errore durante la visualizzazione dell'area geografica", e);
@@ -219,10 +221,14 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
         return result.toString();
     }
 
-    private void appendParametriClimatici(StringBuilder result, int coordinateMonitoraggioId) throws SQLException {
-        String sql = "SELECT AVG(vento) AS avg_vento, AVG(umidita) AS avg_umidita, " +
-                "AVG(pressione) AS avg_pressione, AVG(temperatura) AS avg_temperatura, " +
-                "AVG(precipitazioni) AS avg_precipitazioni, AVG(altitudine) AS avg_altitudine, " +
+    private boolean appendParametriClimatici(StringBuilder result, int coordinateMonitoraggioId) throws SQLException {
+        String sql = "SELECT COUNT(*) AS num_rilevazioni, " +
+                "AVG(vento) AS avg_vento, " +
+                "AVG(umidita) AS avg_umidita, " +
+                "AVG(pressione) AS avg_pressione, " +
+                "AVG(temperatura) AS avg_temperatura, " +
+                "AVG(precipitazioni) AS avg_precipitazioni, " +
+                "AVG(altitudine) AS avg_altitudine, " +
                 "AVG(massa_ghiacciai) AS avg_massa_ghiacciai " +
                 "FROM parametriclimatici WHERE coordinate_monitoraggio_id = ?";
 
@@ -233,14 +239,43 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    result.append("Medie dei parametri climatici:\n");
-                    result.append("Vento: ").append(rs.getDouble("avg_vento")).append("\n");
-                    result.append("Umidità: ").append(rs.getDouble("avg_umidita")).append("\n");
-                    result.append("Pressione: ").append(rs.getDouble("avg_pressione")).append("\n");
-                    result.append("Temperatura: ").append(rs.getDouble("avg_temperatura")).append("\n");
-                    result.append("Precipitazioni: ").append(rs.getDouble("avg_precipitazioni")).append("\n");
-                    result.append("Altitudine: ").append(rs.getDouble("avg_altitudine")).append("\n");
-                    result.append("Massa ghiacciai: ").append(rs.getDouble("avg_massa_ghiacciai")).append("\n");
+                    int numRilevazioni = rs.getInt("num_rilevazioni");
+                    if (numRilevazioni > 0) {
+                        result.append("\nDati climatici:\n");
+                        result.append("Numero di rilevazioni: ").append(numRilevazioni).append("\n");
+                        result.append("Medie dei parametri climatici:\n");
+                        result.append("Vento: ").append(String.format("%.2f", rs.getDouble("avg_vento"))).append("\n");
+                        result.append("Umidità: ").append(String.format("%.2f", rs.getDouble("avg_umidita"))).append("\n");
+                        result.append("Pressione: ").append(String.format("%.2f", rs.getDouble("avg_pressione"))).append("\n");
+                        result.append("Temperatura: ").append(String.format("%.2f", rs.getDouble("avg_temperatura"))).append("\n");
+                        result.append("Precipitazioni: ").append(String.format("%.2f", rs.getDouble("avg_precipitazioni"))).append("\n");
+                        result.append("Altitudine: ").append(String.format("%.2f", rs.getDouble("avg_altitudine"))).append("\n");
+                        result.append("Massa ghiacciai: ").append(String.format("%.2f", rs.getDouble("avg_massa_ghiacciai"))).append("\n");
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private void appendCommentiOperatori(StringBuilder result, int coordinateMonitoraggioId) throws SQLException {
+        String sql = "SELECT note FROM parametriclimatici WHERE coordinate_monitoraggio_id = ? AND note IS NOT NULL AND note != '' ORDER BY data_rilevazione DESC LIMIT 5";
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, coordinateMonitoraggioId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                result.append("\nCommenti recenti degli operatori:\n");
+                boolean hasComments = false;
+                while (rs.next()) {
+                    result.append("- ").append(rs.getString("note")).append("\n");
+                    hasComments = true;
+                }
+                if (!hasComments) {
+                    result.append("Nessun commento disponibile.\n");
                 }
             }
         }
@@ -532,8 +567,6 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
             throw new RemoteException("Errore nell'inserimento dei parametri climatici", e);
         }
     }
-
-
 
     @Override
     public boolean autenticaOperatore(String userId, String password) throws RemoteException {

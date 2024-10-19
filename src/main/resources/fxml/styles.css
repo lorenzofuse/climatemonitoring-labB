@@ -28,6 +28,7 @@
     -fx-background-color: #f5f5f5;
     -fx-border-color: #dddddd;
     -fx-border-radius: 3;
+    -fx-text-fill: black;
 }
 
 /* Pannelli */

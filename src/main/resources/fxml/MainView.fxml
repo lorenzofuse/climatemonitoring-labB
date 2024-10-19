@@ -52,6 +52,18 @@
                 </VBox>
             </Tab>
 
+            <Tab text="Visualizza Dati Climatici" closable="false">
+                <VBox spacing="15" styleClass="content-pane">
+                    <HBox spacing="10" alignment="CENTER">
+                        <TextField fx:id="areaNameField" promptText="Nome area" HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="areaStateField" promptText="Stato" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="viewClimateDataButton" text="Visualizza" onAction="#handleViewClimateData" styleClass="primary-button"/>
+                    </HBox>
+                    <TextArea fx:id="climateDataResultArea" VBox.vgrow="ALWAYS" editable="false" wrapText="true"/>
+                </VBox>
+            </Tab>
+
+
             <Tab fx:id="operatorTab" text="Operatore" closable="false">
                 <VBox spacing="15" styleClass="content-pane">
                     <Button text="Crea Centro di Monitoraggio"
