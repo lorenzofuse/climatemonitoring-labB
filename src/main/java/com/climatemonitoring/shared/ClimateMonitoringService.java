@@ -5,6 +5,7 @@ import com.climatemonitoring.model.OperatoriRegistrati;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface ClimateMonitoringService extends Remote {
 
     String visualizzaAreaCentroMonitoraggio(int areaId) throws RemoteException; //display area dentro centromonitoraggio (cerca dalle aree che l'operatore crea)
 
-    boolean registrazione(String nome, String cognome,String codiceFiscale, String email,String userId, String password) throws RemoteException;
+    boolean registrazione(String nome, String cognome,String codiceFiscale, String email,String userId, String password) throws RemoteException, SQLException;
 
     boolean verificaUser(String userId, String password) throws RemoteException;
 

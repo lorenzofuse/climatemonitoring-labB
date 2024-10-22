@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
 
 import java.rmi.RemoteException;
@@ -254,13 +255,8 @@ public class MainController {
         dialog.setTitle("Crea centro di monitoraggio");
         dialog.setHeaderText("Inserisci i dettagli del centro di monitoraggio");
 
-        ButtonType createButtonType = new ButtonType("Crea", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(10));
 
         TextField nomeField = new TextField();
         TextField indirizzoField = new TextField();
@@ -268,41 +264,47 @@ public class MainController {
         TextField comuneField = new TextField();
         TextField provinciaField = new TextField();
 
-        grid.add(new Label("Nome:"), 0, 0);
-        grid.add(nomeField, 1, 0);
-        grid.add(new Label("Indirizzo:"), 0, 1);
-        grid.add(indirizzoField, 1, 1);
-        grid.add(new Label("CAP:"), 0, 2);
-        grid.add(capField, 1, 2);
-        grid.add(new Label("Comune:"), 0, 3);
-        grid.add(comuneField, 1, 3);
-        grid.add(new Label("Provincia:"), 0, 4);
-        grid.add(provinciaField, 1, 4);
+        content.getChildren().addAll(
+                new Label("Nome:"), nomeField,
+                new Label("Indirizzo:"), indirizzoField,
+                new Label("CAP:"), capField,
+                new Label("Comune:"), comuneField,
+                new Label("Provincia:"), provinciaField
+        );
 
-        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().setContent(content);
+
+        ButtonType createButton = new ButtonType("Crea", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType("Annulla", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(createButton, cancelButton);
+
 
         dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == createButtonType) {
+            if (dialogButton == createButton) {
+                if (nomeField.getText().trim().isEmpty()) {
+                    showAlert(Alert.AlertType.ERROR, "Errore", "Campo obbligatorio", "Il nome è obbligatorio");
+                    return null;
+                }
                 try {
                     boolean success = ClientCM.getService().creaCentroMonitoraggio(
                             currentUser.getId(),
-                            nomeField.getText(),
-                            indirizzoField.getText(),
-                            capField.getText(),
-                            comuneField.getText(),
-                            provinciaField.getText()
+                            nomeField.getText().trim(),
+                            indirizzoField.getText().trim(),
+                            capField.getText().trim(),
+                            comuneField.getText().trim(),
+                            provinciaField.getText().trim()
                     );
 
                     if (success) {
                         showAlert(Alert.AlertType.INFORMATION, "Successo",
-                                "Centro creato", "Il centro di monitoraggio è stato creato con successo.");
+                                "Centro creato", "Il centro è stato creato con successo");
                     } else {
                         showAlert(Alert.AlertType.ERROR, "Errore",
-                                "Creazione fallita", "Non è stato possibile creare il centro di monitoraggio.");
+                                "Creazione fallita", "Non è stato possibile creare il centro");
                     }
                 } catch (RemoteException e) {
-                    showAlert(Alert.AlertType.ERROR, "Errore di connessione",
-                            "Errore del server", "Si è verificato un errore durante la creazione del centro: " + e.getMessage());
+                    showAlert(Alert.AlertType.ERROR, "Errore",
+                            "Errore di connessione", "Errore durante la creazione: " + e.getMessage());
                 }
             }
             return null;
@@ -314,81 +316,79 @@ public class MainController {
     @FXML
     private void handleCreateArea() {
         if (currentUser == null) {
-            showAlert(Alert.AlertType.ERROR, "Errore", "Accesso Negato", "Effettua il login come operatore");
+            showAlert(Alert.AlertType.ERROR, "Errore", "Accesso negato", "Effettua il login come operatore");
             return;
         }
+
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Crea Area di Interesse");
         dialog.setHeaderText("Inserisci i dettagli dell'area di interesse");
 
-        ButtonType createButtonType = new ButtonType("Crea", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(10));
 
         TextField cittaField = new TextField();
         TextField statoField = new TextField();
-        TextField paeseField = new TextField();
         TextField latitudineField = new TextField();
         TextField longitudineField = new TextField();
 
-        grid.add(new Label("Città:"), 0, 0);
-        grid.add(cittaField, 1, 0);
-        grid.add(new Label("Stato:"), 0, 1);
-        grid.add(statoField, 1, 1);
-        grid.add(new Label("Paese:"), 0, 2);
-        grid.add(paeseField, 1, 2);
-        grid.add(new Label("Latitudine:"), 0, 3);
-        grid.add(latitudineField, 1, 3);
-        grid.add(new Label("Longitudine:"), 0, 4);
-        grid.add(longitudineField, 1, 4);
+        content.getChildren().addAll(
+                new Label("Città:"), cittaField,
+                new Label("Stato:"), statoField,
+                new Label("Latitudine:"), latitudineField,
+                new Label("Longitudine:"), longitudineField
+        );
 
-        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().setContent(content);
+
+        ButtonType createButton = new ButtonType("Crea", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType("Annulla", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(createButton, cancelButton);
 
         dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == createButtonType) {
+            if (dialogButton == createButton) {
+                if (cittaField.getText().trim().isEmpty() || statoField.getText().trim().isEmpty()) {
+                    showAlert(Alert.AlertType.ERROR, "Errore",
+                            "Campi obbligatori", "Città e stato sono obbligatori");
+                    return null;
+                }
+
                 try {
-                    String citta = cittaField.getText();
-                    String stato = statoField.getText();
-                    double latitudine = Double.parseDouble(latitudineField.getText());
-                    double longitudine = Double.parseDouble(longitudineField.getText());
+                    double latitudine = Double.parseDouble(latitudineField.getText().trim());
+                    double longitudine = Double.parseDouble(longitudineField.getText().trim());
 
                     boolean success = ClientCM.getService().creaAreaInteresse(
                             currentUser.getId(),
-                            citta,
-                            stato,
+                            cittaField.getText().trim(),
+                            statoField.getText().trim(),
                             latitudine,
                             longitudine
                     );
 
                     if (success) {
                         showAlert(Alert.AlertType.INFORMATION, "Successo",
-                                "Area creata", "L'area di interesse è stata creata con successo.");
+                                "Area creata", "L'area è stata creata con successo");
                         updateAreaComboBox();
                     } else {
                         showAlert(Alert.AlertType.ERROR, "Errore",
-                                "Creazione fallita", "Non è stato possibile creare l'area di interesse.");
+                                "Creazione fallita", "Non è stato possibile creare l'area");
                     }
                 } catch (NumberFormatException e) {
-                    showAlert(Alert.AlertType.ERROR, "Errore di input",
-                            "Formato non valido", "Inserisci coordinate valide.");
+                    showAlert(Alert.AlertType.ERROR, "Errore",
+                            "Formato non valido", "Inserisci coordinate numeriche valide");
                 } catch (RemoteException e) {
                     if (e.getMessage().contains("non ha un centro di monitoraggio")) {
                         showAlert(Alert.AlertType.ERROR, "Errore",
-                                "Centro di Monitoraggio mancante",
-                                "Devi prima creare un centro di monitoraggio prima di poter creare un'area di interesse.");
+                                "Centro mancante", "Crea prima un centro di monitoraggio");
                     } else {
-                        showAlert(Alert.AlertType.ERROR, "Errore di connessione",
-                                "Errore del server",
-                                "Si è verificato un errore durante la creazione dell'area: " + e.getMessage());
+                        showAlert(Alert.AlertType.ERROR, "Errore",
+                                "Errore di connessione", "Errore durante la creazione: " + e.getMessage());
                     }
                 }
             }
             return null;
         });
+
         dialog.showAndWait();
     }
 
@@ -396,33 +396,15 @@ public class MainController {
         if (areaComboBox != null && currentUser != null) {
             try {
                 List<CoordinateMonitoraggio> aree = ClientCM.getService().getAreePerCentroMonitoraggio(currentUser.getId());
-
                 areaComboBox.getItems().clear();
                 areaComboBox.getItems().addAll(aree);
             } catch (RemoteException e) {
-                showAlert(Alert.AlertType.ERROR, "Errore di aggiornamento",
-                        "Impossibile aggiornare le aree",
-                        "Si è verificato un errore durante l'aggiornamento delle aree: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR, "Errore",
+                        "Aggiornamento fallito", "Impossibile aggiornare le aree: " + e.getMessage());
             }
         }
     }
 
-
-    private void logClimateDataInsertion(CoordinateMonitoraggio selectedArea, LocalDate date,
-                                         int vento, int umidita, int pressione, int temperatura,
-                                         int precipitazioni, int altitudine, int massaGhiacciai, String note) {
-        System.out.println("Tentativo di inserimento dati climatici:");
-        System.out.println("Area: " + selectedArea.getNomeCitta() + ", " + selectedArea.getStato());
-        System.out.println("Data: " + date);
-        System.out.println("Vento (km/h): " + vento);
-        System.out.println("Umidità (%): " + umidita);
-        System.out.println("Pressione (hPa): " + pressione);
-        System.out.println("Temperatura (°C): " + temperatura);
-        System.out.println("Precipitazioni (mm): " + precipitazioni);
-        System.out.println("Altitudine ghiacciai (m): " + altitudine);
-        System.out.println("Massa ghiacciai (kg): " + massaGhiacciai);
-        System.out.println("Note: " + note);
-    }
 
     @FXML
     private void handlInsertClimateData() {
@@ -498,19 +480,6 @@ public class MainController {
                     return null;
                 }
 
-                //loggin dei dati
-                logClimateDataInsertion(
-                        selectedArea,
-                        selectedDate,
-                        ventoSpinner.getValue(),
-                        umiditaSpinner.getValue(),
-                        pressioneSpinner.getValue(),
-                        temperaturaSpinner.getValue(),
-                        precipitazioniSpinner.getValue(),
-                        altitudineSpinner.getValue(),
-                        massaGhiacciaiSpinner.getValue(),
-                        noteArea.getText()
-                );
 
                 if (!validateClimateData(ventoSpinner.getValue(), umiditaSpinner.getValue(),
                         pressioneSpinner.getValue(), temperaturaSpinner.getValue(),

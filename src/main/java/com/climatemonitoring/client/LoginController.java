@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 
 public class LoginController {
 
@@ -33,8 +34,7 @@ public class LoginController {
         String password = passwordField.getText().trim();
 
         if (userId.isEmpty() || password.isEmpty()) {
-            showAlert(Alert.AlertType.ERROR,"Errore di Login", "Campi vuoti",
-                    "Inserisci sia username che password.");
+            showAlert(Alert.AlertType.ERROR,"Errore di Login", "Campi vuoti", "Inserisci sia username che password.");
             return;
         }
 
@@ -69,10 +69,11 @@ public class LoginController {
         Dialog<OperatoriRegistrati> dialog = new Dialog<>();
         dialog.setTitle("Registrazione nuovo operatore");
         dialog.setHeaderText("Inserisci i tuoi dati per registrarti");
+
         ButtonType registraButtonType = new ButtonType("Registra", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(registraButtonType, ButtonType.CANCEL);
 
-        VBox content = new VBox(10);
+        VBox content = new VBox(10); //box da 10
         TextField nomeField = new TextField();
         nomeField.setPromptText("Nome");
         TextField cognomeField = new TextField();
@@ -107,30 +108,27 @@ public class LoginController {
                     String userId = newUserIdField.getText();
                     String password = newPasswordField.getText();
 
-                    // Controllo che tutti i campi siano pieni prima di procedere
+
                     if (nome.isEmpty() || cognome.isEmpty() || codiceFiscale.isEmpty() || email.isEmpty() || userId.isEmpty() || password.isEmpty()) {
                         showAlert(Alert.AlertType.ERROR, "Errore Registrazione", "Campi vuoti", "Compila tutti i campi per registrarti.");
                         return null;
                     }
 
-                    // Chiamata al metodo di registrazione che assegna automaticamente l'ID del centro di monitoraggio
+
                     boolean registrationSuccess = ClientCM.getService().registrazione(nome, cognome, codiceFiscale, email, userId, password);
                     if (registrationSuccess) {
                         showAlert(Alert.AlertType.INFORMATION, "Registrazione Completata",
-                                "Registrazione avvenuta con successo",
-                                "Puoi ora effettuare il login con le tue credenziali.");
-                        return new OperatoriRegistrati(0, nome, cognome, codiceFiscale, email, userId, password); // L'ID del centro verrà assegnato dal server
+                                "Registrazione avvenuta con successo", "Puoi ora effettuare il login con le tue credenziali.");
+                        return new OperatoriRegistrati(0, nome, cognome, codiceFiscale, email, userId, password);
                     } else {
-                        showAlert(Alert.AlertType.ERROR, "Errore Registrazione",
-                                "Registrazione fallita",
-                                "Si è verificato un errore durante la registrazione.");
+                        showAlert(Alert.AlertType.ERROR, "Errore Registrazione", "Registrazione fallita", "Si è verificato un errore durante la registrazione.");
                         return null;
                     }
                 } catch (RemoteException e) {
-                    showAlert(Alert.AlertType.ERROR, "Errore di Connessione",
-                            "Errore del Server",
-                            "Si è verificato un errore durante la registrazione: " + e.getMessage());
+                    showAlert(Alert.AlertType.ERROR, "Errore di Connessione", "Errore del Server", "Si è verificato un errore durante la registrazione: " + e.getMessage());
                     return null;
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
                 }
             }
             return null;
