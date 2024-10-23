@@ -621,32 +621,81 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
     @Override
     public List<CoordinateMonitoraggio> getAreePerCentroMonitoraggio(int centroMonitoraggioId) throws RemoteException {
         List<CoordinateMonitoraggio> aree = new ArrayList<>();
-        String query = "SELECT a.* FROM areeinteresse a " +
-                "JOIN centrimonitoraggio c ON a.centro_monitoraggio_id = c.id " +
-                "WHERE c.operatore_id = ?";
 
-        try (PreparedStatement pstmt = dbManager.getConnection().prepareStatement(query)) {
-            pstmt.setInt(1, centroMonitoraggioId);
+        String queryAreeInteresse = "SELECT a.* FROM areeinteresse a " +
+                "WHERE a.centro_monitoraggio_id = ?";
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
+        String queryCoordinate = "SELECT * FROM coordinatemonitoraggio";
+
+        try {
+            Connection conn = dbManager.getConnection();
+            PreparedStatement pstmtAree = conn.prepareStatement(queryAreeInteresse);
+            PreparedStatement pstmtCoord = conn.prepareStatement(queryCoordinate);
+
+            pstmtAree.setInt(1, centroMonitoraggioId);
+            try {
+                ResultSet rsAree = pstmtAree.executeQuery();
+                while (rsAree.next()) {
                     CoordinateMonitoraggio area = new CoordinateMonitoraggio(
-                            rs.getInt("id"),
-                            rs.getString("nome"),
-                            rs.getString("stato"),
-                            null, // paese non presente nella tabella areeinteresse
-                            rs.getDouble("latitudine"),
-                            rs.getDouble("longitudine")
+                            rsAree.getInt("id"),
+                            rsAree.getString("nome"),
+                            rsAree.getString("stato"),
+                            "", // paese non presente nelle aree di interesse
+                            rsAree.getDouble("latitudine"),
+                            rsAree.getDouble("longitudine")
                     );
                     aree.add(area);
                 }
+            }catch (Exception e){
+                e.printStackTrace();
             }
+
+             try {
+                 ResultSet rsCoord = pstmtCoord.executeQuery();
+                while (rsCoord.next()) {
+                    CoordinateMonitoraggio coord = new CoordinateMonitoraggio(
+                            rsCoord.getInt("id"),
+                            rsCoord.getString("nome_citta"),
+                            rsCoord.getString("stato"),
+                            rsCoord.getString("paese"),
+                            rsCoord.getDouble("latitudine"),
+                            rsCoord.getDouble("longitudine")
+                    );
+                    aree.add(coord);
+                }
+            }catch (Exception e2){
+                 e2.printStackTrace();
+             }
+
         } catch (SQLException e) {
-             e.printStackTrace();
-             throw new RemoteException("Errore nel recupero delle aree di interesse", e);
+            e.printStackTrace();
+            throw new RemoteException("Errore nel recupero delle aree", e);
         }
 
         return aree;
     }
+
+    @Override
+    public Integer getAreaInteresseId(String nomeArea) throws RemoteException {
+        String sql = "SELECT id FROM areeinteresse WHERE nome = ?";
+
+        try {
+            Connection conn = dbManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, nomeArea);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RemoteException("Errore nel recupero dell'ID dell'area di interesse", e);
+        }
+
+        return null;
+    }
+
 
 }

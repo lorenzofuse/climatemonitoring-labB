@@ -11,6 +11,7 @@ public class CoordinateMonitoraggio implements Serializable {
     private String paese;
     private double latitudine;
     private double longitudine;
+    boolean isAreaInteresse;
 
     public CoordinateMonitoraggio() {}
 
@@ -24,6 +25,16 @@ public class CoordinateMonitoraggio implements Serializable {
         this.longitudine = longitudine;
     }
 
+    public CoordinateMonitoraggio(int id, String nome, String stato, String paese,
+                                  double latitudine, double longitudine, boolean isAreaInteresse) {
+        this.id = id;
+        this.nomeCitta = nome;
+        this.stato = stato;
+        this.paese = paese;
+        this.latitudine = latitudine;
+        this.longitudine = longitudine;
+        this.isAreaInteresse = isAreaInteresse;
+    }
     public int getId() {
         return id;
     }
@@ -77,4 +88,11 @@ public class CoordinateMonitoraggio implements Serializable {
         return String.format("%s, %s (Lat: %.2f, Long: %.2f)", nomeCitta, stato, latitudine, longitudine);
     }
 
+    public boolean isAreaInteresse() {
+        return isAreaInteresse;
+    }
+
+    public void setAreaInteresse(boolean areaInteresse) {
+        isAreaInteresse = areaInteresse;
+    }
 }
