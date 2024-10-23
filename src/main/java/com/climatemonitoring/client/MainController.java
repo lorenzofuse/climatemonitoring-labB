@@ -234,13 +234,19 @@ public class MainController {
         try {
             String ris = ClientCM.getService().visualizzaAreaGeografica(nome, stato);
 
-            if (ris.isEmpty()) {
-                climateDataResultArea.setText("Nessuna informazione disponibile per quest'area");
+            if (ris.equals("Area non trovata.")) {
+                climateDataResultArea.setText("Nessuna area geografica trovata con i parametri specificati");
             } else {
                 climateDataResultArea.setText(ris);
             }
+        } catch (IllegalArgumentException e) {
+            showAlert(Alert.AlertType.ERROR, "Errore di validazione",
+                    "Parametri non validi", e.getMessage());
         } catch (RemoteException e) {
-            showAlert(Alert.AlertType.ERROR, "Errore di connessione", "Errore del server", "Si è verificato un errore durante la ricerca: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Errore di connessione",
+                    "Errore del server",
+                    "Si è verificato un errore durante la ricerca: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

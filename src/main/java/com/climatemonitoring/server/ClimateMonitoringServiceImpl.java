@@ -4,6 +4,7 @@ import com.climatemonitoring.model.OperatoriRegistrati;
 import com.climatemonitoring.shared.ClimateMonitoringService;
 import com.climatemonitoring.util.DatabaseManager;
 import com.climatemonitoring.model.CoordinateMonitoraggio;
+import javafx.scene.control.Alert;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -30,15 +31,18 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
             throw new IllegalArgumentException("Nome e stato non possono essere nulli o vuoti");
         }
 
-        String sql = "SELECT * FROM coordinatemonitoraggio WHERE nome_citta = ? AND stato = ?";
+        String sql = "SELECT * FROM coordinatemonitoraggio WHERE nome_citta LIKE ? AND stato = ?";
 
-        try (Connection conn = dbManager.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+
+            Connection conn = dbManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, "%" + nome + "%");
             pstmt.setString(2, stato);
 
-            try (ResultSet rs = pstmt.executeQuery()){
+            try {
+                ResultSet rs = pstmt.executeQuery();
 
                 while (rs.next()) {
                     CoordinateMonitoraggio area = new CoordinateMonitoraggio(
@@ -51,6 +55,8 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
                     );
                     aree.add(area);
                 }
+            }catch(SQLException e1){
+                e1.printStackTrace();
             }
         }catch (Exception e) {
                 throw new RemoteException("Errore durante la ricerca delle aree geografiche", e);
@@ -173,13 +179,14 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
     }
 
     @Override
+    //per cittadino
     public String visualizzaAreaGeografica(String nome, String stato) throws RemoteException {
+
         if (nome == null || nome.trim().isEmpty() || stato == null || stato.trim().isEmpty()) {
             throw new IllegalArgumentException("Nome e stato non possono essere nulli o vuoti");
         }
 
-        String sql = "SELECT * FROM coordinatemonitoraggio WHERE nome = ? AND stato = ?";
-
+        String sql = "SELECT * FROM coordinatemonitoraggio WHERE nome_citta = ? AND stato = ?";
         StringBuilder result = new StringBuilder();
 
         try {
@@ -252,7 +259,27 @@ public class ClimateMonitoringServiceImpl extends UnicastRemoteObject implements
                         result.append("Altitudine: ").append(String.format("%.2f", rs.getDouble("avg_altitudine"))).append("\n");
                         result.append("Massa ghiacciai: ").append(String.format("%.2f", rs.getDouble("avg_massa_ghiacciai"))).append("\n");
                         return true;
-                    }
+                    } else {
+                    result.append("\nVento\n");
+                    result.append("Velocità Media (m/s): -\n");
+                    result.append("Score Medio: -\n");
+                    result.append("Numero Rilevazioni: 0\n\n");
+
+                    result.append("Umidità\n");
+                    result.append("Umidità Media (%): -\n");
+                    result.append("Score Medio: -\n");
+                    result.append("Numero Rilevazioni: 0\n\n");
+
+                    result.append("Pressione\n");
+                    result.append("Pressione Media (hPa): -\n");
+                    result.append("Score Medio: -\n");
+                    result.append("Numero Rilevazioni: 0\n\n");
+
+                    result.append("Temperatura\n");
+                    result.append("Temperatura Media (°C): -\n");
+                    result.append("Score Medio: -\n");
+                    result.append("Numero Rilevazioni: 0\n\n");
+                }
                 }
             }
         }
