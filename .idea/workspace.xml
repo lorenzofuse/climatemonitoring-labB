@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="Risoluzione ricerca per nome&#10;&#10;Risoluzione visualizzazione dati climatici per comune cittadino&#10;&#10;Da implementare ins par clim dentro Operatore&#10;può decidere se dentro le aree che crea oppure dentro quelle in coordinatemonitoraggio nel db">
+    <list default="true" id="b4fe525a-7064-49f6-9604-240d8a3eeaaf" name="Changes" comment="Aggiunta Visualizz Dati Climatici&#10;Questo btn ha la funzione di far visualizzare a chiunque i parametri associati dall'operatore alle aree che ci sono dentro coordinatemonitoraggio (da implementare l'inserimento (per ora l'operatore può inserire i par clim solo nelle sue aree))">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CoordinateMonitoraggio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/model/CoordinateMonitoraggio.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/server/ClimateMonitoringServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/shared/ClimateMonitoringService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/shared/ClimateMonitoringService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/util/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/climatemonitoring/util/DatabaseManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,15 +85,6 @@
       <item itemvalue="Application.ClientCM" />
       <item itemvalue="Application.ServecCM" />
     </list>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="jdk-17.0.10-corretto-17.0.10-4caba194b151-5cd809f4" />
-        <option value="jdk-17.0.9-corretto-17.0.9-f644763e9732-ebaef533" />
-        <option value="jdk-21.0.1-openjdk-21.0.1-249ae16d76d6-a618e4d4" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -201,15 +191,7 @@
       <option name="project" value="LOCAL" />
       <updated>1729344362361</updated>
     </task>
-    <task id="LOCAL-00013" summary="Risoluzione ricerca per nome&#10;&#10;Risoluzione visualizzazione dati climatici per comune cittadino&#10;&#10;Da implementare ins par clim dentro Operatore&#10;può decidere se dentro le aree che crea oppure dentro quelle in coordinatemonitoraggio nel db">
-      <option name="closed" value="true" />
-      <created>1729674198054</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1729674198054</updated>
-    </task>
-    <option name="localTasksCounter" value="14" />
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -235,8 +217,7 @@
     <MESSAGE value="Implementato btn per la creazione dell'area di interesse che si associa in automatico al centro dell'operatore che lo crea&#10;Da risolvere problematica inserisciParametriClimatici e il suo handle&#10;problemi in visualizzazione vedere foto" />
     <MESSAGE value="Revisione" />
     <MESSAGE value="Aggiunta Visualizz Dati Climatici&#10;Questo btn ha la funzione di far visualizzare a chiunque i parametri associati dall'operatore alle aree che ci sono dentro coordinatemonitoraggio (da implementare l'inserimento (per ora l'operatore può inserire i par clim solo nelle sue aree))" />
-    <MESSAGE value="Risoluzione ricerca per nome&#10;&#10;Risoluzione visualizzazione dati climatici per comune cittadino&#10;&#10;Da implementare ins par clim dentro Operatore&#10;può decidere se dentro le aree che crea oppure dentro quelle in coordinatemonitoraggio nel db" />
-    <option name="LAST_COMMIT_MESSAGE" value="Risoluzione ricerca per nome&#10;&#10;Risoluzione visualizzazione dati climatici per comune cittadino&#10;&#10;Da implementare ins par clim dentro Operatore&#10;può decidere se dentro le aree che crea oppure dentro quelle in coordinatemonitoraggio nel db" />
+    <option name="LAST_COMMIT_MESSAGE" value="Aggiunta Visualizz Dati Climatici&#10;Questo btn ha la funzione di far visualizzare a chiunque i parametri associati dall'operatore alle aree che ci sono dentro coordinatemonitoraggio (da implementare l'inserimento (per ora l'operatore può inserire i par clim solo nelle sue aree))" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

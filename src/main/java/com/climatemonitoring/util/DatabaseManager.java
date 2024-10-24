@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class DatabaseManager {
     //fisso 5433 msi 5432
-    private static final String DB_URL = "jdbc:postgresql://localhost:5433/ClimateMonitoring";
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/ClimateMonitoring";
     private static final String DB_USER = "postgres";
     private static final String DB_PSW = "postgre";
     private static DatabaseManager instance;
